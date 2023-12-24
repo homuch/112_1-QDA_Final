@@ -1,1 +1,7 @@
 Hello!
+
+
+use this for avoid changes are recorded in cudd:
+
+cd cudd/
+git update-index --assume-unchanged $(git ls-files | tr '\n' ' ')
