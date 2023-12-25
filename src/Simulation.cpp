@@ -74,6 +74,19 @@ void Simulator::sim_qasm_file(std::string qasm)
                 int cIndex = stoi(inStr);
                 measure(qIndex, cIndex);
             }
+            else if (inStr == "rus"){
+                getline(inStr_ss, inStr, '[');
+                getline(inStr_ss, inStr, ']');
+                int qIndex = stoi(inStr);
+                getline(inStr_ss, inStr, ',');
+                getline(inStr_ss, inStr, ';');
+                int succ_res = stoi(inStr);
+                std::vector<int> mqubits(1);
+                std::vector<int> cond(1);
+                mqubits[0] = qIndex;
+                cond[0] = succ_res;
+                RUS(mqubits, cond);
+            }
             else
             {
                 if (inStr == "x")

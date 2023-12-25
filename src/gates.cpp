@@ -1076,3 +1076,13 @@ void Simulator::measure(int qreg, int creg)
     assert(creg < nClbits);
     measured_qubits_to_clbits[qreg].push_back(creg);
 }
+
+void Simulator::RUS(std::vector<int> mqubits, std::vector<int> cond){
+    std::unordered_map<int, int> qubit_to_cond;
+    for (int i = 0; i < mqubits.size(); i++)
+    {
+        assert((mqubits[i] >= 0) & (mqubits[i] < n));
+        qubit_to_cond[mqubits[i]] = cond[i];
+    }
+    measure_and_collapse(qubit_to_cond);
+}

@@ -4,6 +4,204 @@
 
 /**Function*************************************************************
 
+  Synopsis    [measure a specific qubit and collapse to a specific state]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+void Simulator::measure_and_collapse(std::unordered_map<int, int> &qubit_to_state){
+    double oneroot2 = 1 / sqrt(2);
+    double H_factor = pow(oneroot2, k%2);
+    // move measured qubits to the top
+    int *permutation = new int[n];
+    int indCount1 = 0;
+    int indCount0 = qubit_to_state.size();  // number of measured qubits
+    int first_index;
+    for (int i = 0; i < n; i++)
+    {
+        int index = Cudd_ReadInvPerm(manager, i);
+        if (qubit_to_state.find(index)!=qubit_to_state.end())
+        {
+            permutation[indCount1] = index;
+            indCount1++;
+        }
+        else
+        {
+            permutation[indCount0] = index;
+            indCount0++;
+        }
+    }
+    int dum = Cudd_ShuffleHeap(manager, permutation);    
+    // first_index = Cudd_ReadPerm(manager, 0);
+    first_index = permutation[0];
+    std::cout<<"[";
+    for (int i = 0; i < n; i++)
+    {
+        std::cout<<Cudd_ReadPerm(manager, i)<<",";
+    }
+    std::cout<<"]"<<std::endl;
+    // calculate probability of the state
+    int comple;
+    int noNode_f = 0; //flag: 1 if the node we want to measure is reduced
+
+	double p;
+    double rand_num;
+    int position_node=-1;
+    double epsilon = 0.001;
+    double then_edge, else_edge, probability;
+    double re, im;
+    DdNode *node, *tmp, *next_tmp;
+    node = Cudd_bddIthVar(manager, first_index);
+    Cudd_Ref(node); // if this line is not added, there might be some error in CUDD.
+    
+    /* traverse until the qubit measured */
+    comple = Cudd_IsComplement(node);
+    tmp = Cudd_Regular(node);
+    std::unordered_map<int, int>::iterator it;
+    while (it=qubit_to_state.find(tmp->index), it!=qubit_to_state.end())
+    {
+        std::cout<<'('<<it->first<<' '<<it->second<<')'<<std::endl;
+        next_tmp = Cudd_Child(manager, tmp, it->second);
+        if (cuddIsConstant(next_tmp))
+        {
+            noNode_f = 1;
+            break;
+        }
+        if (it->second == 1)
+        {
+            tmp = cuddT(tmp);
+        }
+        else
+        {
+            comple ^= Cudd_IsComplement(cuddE(tmp));
+            tmp = Cudd_Regular(cuddE(tmp));
+        }
+        std::cout<<"update: "<<tmp->index<<std::endl;
+    }
+    Cudd_RecursiveDeref(manager, node);
+    std::cout<<noNode_f<<std::endl;
+    std::cout<<tmp->index<<std::endl;
+    //? is it correct?
+    
+    
+    node = (Cudd_NotCond(tmp, comple));
+    Cudd_Ref(node);
+
+    /* compute probability of the node */
+    probability = simple_measure(node, 0)+simple_measure(node, 1);
+
+    p = probability * H_factor * H_factor * normalize_factor * normalize_factor;
+
+    Cudd_RecursiveDeref(manager, node);
+    std::cout<<"p="<<p<<std::endl;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [calculate probabilities for a single node(without creating bigBDD)]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+double Simulator::simple_measure(DdNode *node, int edge){
+
+    double then_edge, else_edge, probability;
+    double re, im;
+    DdNode *child = Cudd_Child(manager, node, edge), *tmp;
+    Cudd_Ref(child);
+    int position_node = Cudd_ReadPerm(manager, Cudd_NodeReadIndex(node)), position_child = Cudd_ReadPerm(manager, Cudd_NodeReadIndex(child));
+    int skip_level;
+    std::unordered_map<DdNode *, double>::iterator it;
+    it = Node_Table.find(child);
+
+    /* deal with the nodes which are reduced */
+    
+    skip_level = position_child - position_node - 1;
+
+
+    if (false) // constant
+    {
+        if (!(Cudd_IsComplement(child))) // constant 1(-1)
+        {
+            re = 0;
+            im = 0;
+            for (int i = 0; i < w; i++)
+            {
+                re -= cos(((double)i/w) * PI);
+                im -= sin(((double)i/w) * PI);
+            }
+            probability = pow(re, 2) + pow(im, 2);
+            Cudd_RecursiveDeref(manager, child);
+            std::cout<<re<<' '<<im<<std::endl;
+            std::cout<<"constant 1: "<<probability<<std::endl;
+            return probability * pow(2, n - position_node - 1);
+        }
+        else // constant 0
+        {
+            Cudd_RecursiveDeref(manager, child);
+            return 0;
+        }
+    }
+    else
+    {
+        std::cout<<"position_node="<<position_node<<std::endl;
+        std::cout<<"position_child="<<position_child<<std::endl;
+        std::cout<<"n="<<n<<std::endl;
+        if (true) // compute entry
+        {
+            double int_value;
+            
+            int oneEntry;
+            re = 0;
+            im = 0;
+            /* TODO: BDD to truth table */
+            for (int i = 0; i < w; i++) //compute each complex value
+            {
+                int_value = 0;
+                for (int j = 0; j < r; j++) //compute each integer
+                {
+                    tmp = Cudd_bddAnd(manager, child, All_Bdd[i][j]);
+                    Cudd_Ref(tmp);
+                    oneEntry = !(Cudd_IsComplement(tmp));
+                    Cudd_RecursiveDeref(manager, tmp);
+                    if (j == r - 1)
+                        int_value -= oneEntry * pow(2, j + shift - k/2);
+                    else
+                        int_value += oneEntry * pow(2, j + shift - k/2);
+                }
+                /* translate to re and im */
+                re += int_value * cos((double) (w - i - 1)/w * PI);
+                im += int_value * sin((double) (w - i - 1)/w * PI);
+            }
+            probability = pow(re, 2) + pow(im, 2);
+        }
+        else // trace edges
+        {
+            then_edge = simple_measure(child, 1);
+            else_edge = simple_measure(child, 0);
+            probability = then_edge + else_edge;
+            std::cout<<"then_edge="<<then_edge<<std::endl;
+            std::cout<<"else_edge="<<else_edge<<std::endl;
+        }
+    }
+
+    Node_Table[child] = probability;
+    Cudd_RecursiveDeref(manager, child);
+
+    return probability * pow(2, skip_level);
+}
+
+
+/**Function*************************************************************
+
   Synopsis    [calculate probabilities for measurement]
 
   Description []
@@ -216,22 +414,23 @@ void Simulator::measurement()
     
     int *arrAnci_fourInt = new int[nAnci_fourInt];
     for (int i = 0; i < nAnci_fourInt; i++)
-        arrAnci_fourInt[i] = 0;
+        arrAnci_fourInt[i] = 0;// a bit string
     int *arrAnci_oneInt = new int[nAnci_oneInt];
     for (int i = 0; i < nAnci_oneInt; i++)
-        arrAnci_oneInt[i] = 0;
+        arrAnci_oneInt[i] = 0;// a bit string, record the index of bit(BDD of an integer)?
     
     bigBDD = Cudd_Not(Cudd_ReadOne(manager));
     Cudd_Ref(bigBDD);
-    for (int i = 0; i < w; i++)
+    // * Note that Cudd_bddIthVar will automatically create new nodes if it does not exist.
+    for (int i = 0; i < w; i++)// for all integers
     {
         tmp3 = Cudd_Not(Cudd_ReadOne(manager));
         Cudd_Ref(tmp3);
-        for (int j = 0; j < r; j++)
+        for (int j = 0; j < r; j++)// for all bits
         {
             tmp1 = Cudd_ReadOne(manager);
             Cudd_Ref(tmp1);
-            for (int h = n + nAnci - 1; h >= nnAnci_fourInt; h--)
+            for (int h = n + nAnci - 1; h >= nnAnci_fourInt; h--)// add ancilla bits with value from arrAnci_fourInt, i.e., BDD's index
             {
                 if (arrAnci_oneInt[h - nnAnci_fourInt])
                     tmp2 = Cudd_bddAnd(manager, Cudd_bddIthVar(manager, h), tmp1);
@@ -241,12 +440,12 @@ void Simulator::measurement()
                 Cudd_RecursiveDeref(manager, tmp1);
                 tmp1 = tmp2;
             }
-            tmp2 = Cudd_bddAnd(manager, All_Bdd[i][j], tmp1);
+            tmp2 = Cudd_bddAnd(manager, All_Bdd[i][j], tmp1);// AND with the target BDD, i.e., the BDD is (allowed to be) one when the index is assigned to it.
             Cudd_Ref(tmp2);
             Cudd_RecursiveDeref(manager, tmp1);
             // Cudd_RecursiveDeref(manager, All_Bdd[i][j]); // keep these BDDs for statevector after measurement
             tmp1 = tmp2;
-            tmp2 = Cudd_bddOr(manager, tmp3, tmp1);
+            tmp2 = Cudd_bddOr(manager, tmp3, tmp1);// OR with this integer/id. I.e., the BDD is one when the var is valid index
             Cudd_Ref(tmp2);
             Cudd_RecursiveDeref(manager, tmp1);
             Cudd_RecursiveDeref(manager, tmp3);
@@ -255,6 +454,7 @@ void Simulator::measurement()
         }
         tmp1 = Cudd_ReadOne(manager);
         Cudd_Ref(tmp1);
+        // similarly, add ancilla bits with value from arrAnci_fourInt(integers' index)
         for (int j = nnAnci_fourInt - 1; j >= n; j--)
         {
             if (arrAnci_fourInt[j - n])
@@ -265,12 +465,12 @@ void Simulator::measurement()
             Cudd_RecursiveDeref(manager, tmp1);
             tmp1 = tmp2;
         }
-        tmp2 = Cudd_bddAnd(manager, tmp3, tmp1);
+        tmp2 = Cudd_bddAnd(manager, tmp3, tmp1);// the BDD is True when valid BDD index and integer index
         Cudd_Ref(tmp2);
         Cudd_RecursiveDeref(manager, tmp1);
         Cudd_RecursiveDeref(manager, tmp3);
         tmp1 = tmp2;
-        tmp2 = Cudd_bddOr(manager, bigBDD, tmp1);
+        tmp2 = Cudd_bddOr(manager, bigBDD, tmp1);// ORed into the bigBDD
         Cudd_Ref(tmp2);
         Cudd_RecursiveDeref(manager, tmp1);
         Cudd_RecursiveDeref(manager, bigBDD);

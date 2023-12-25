@@ -52,6 +52,7 @@ public:
     void PauliY(int iqubit);
     void PauliZ(std::vector<int> iqubit); // Z or CZ
     void measure(int qreg, int creg);
+    void RUS(std::vector<int> mqubits, std::vector<int> cond);
 
     /* measurement */
     void measurement();
@@ -100,6 +101,8 @@ private:
     /* measurement */
     double measure_probability(DdNode *node, int kd2, int nVar, int nAnci_fourInt, int edge);
     void measure_one(int position, int kd2, double H_factor, int nVar, int nAnci_fourInt, std::string *outcome);
+    void measure_and_collapse(std::unordered_map<int,int>& measured_qubits_to_clbits);
+    double simple_measure(DdNode *node, int edge);
 
     /* misc */
     void init_state(int *constants);
