@@ -16,8 +16,11 @@
 void Simulator::measure_and_collapse(std::unordered_map<int, int> &qubit_to_state){
     double oneroot2 = 1 / sqrt(2);
     double H_factor = pow(oneroot2, k%2);
+    int nAnci_oneInt = ceil(log(r) / log(2)), nAnci_fourInt = ceil(log(w) / log(2));
+    int nVar = n + nAnci_oneInt + nAnci_fourInt;
+    build_bigBDD(nAnci_oneInt, nAnci_fourInt);
     // move measured qubits to the top
-    int *permutation = new int[n];
+    int *permutation = new int[nVar];
     int indCount1 = 0;
     int indCount0 = qubit_to_state.size();  // number of measured qubits
     int first_index;
@@ -35,41 +38,60 @@ void Simulator::measure_and_collapse(std::unordered_map<int, int> &qubit_to_stat
             indCount0++;
         }
     }
+    for(int i=n;i<nVar;i++)
+        permutation[i] = Cudd_ReadInvPerm(manager, i);
+    
     int dum = Cudd_ShuffleHeap(manager, permutation);    
+    nodecount();
     // first_index = Cudd_ReadPerm(manager, 0);
-    first_index = permutation[0];
-    std::cout<<"[";
-    for (int i = 0; i < n; i++)
-    {
-        std::cout<<Cudd_ReadPerm(manager, i)<<",";
-    }
-    std::cout<<"]"<<std::endl;
+    // first_index = permutation[0];
+    // std::cout<<"[";
+    // for (int i = 0; i < n; i++)
+    // {
+    //     std::cout<<Cudd_ReadPerm(manager, i)<<",";
+    // }
+    // std::cout<<"]"<<std::endl;
     // calculate probability of the state
     int comple;
     int noNode_f = 0; //flag: 1 if the node we want to measure is reduced
 
-	double p;
+	double p, p_next;
     double rand_num;
     int position_node=-1;
     double epsilon = 0.001;
     double then_edge, else_edge, probability;
     double re, im;
     DdNode *node, *tmp, *next_tmp;
-    node = Cudd_bddIthVar(manager, first_index);
-    Cudd_Ref(node); // if this line is not added, there might be some error in CUDD.
     
+    Cudd_Ref(bigBDD); // if this line is not added, there might be some error in CUDD.
+
     /* traverse until the qubit measured */
-    comple = Cudd_IsComplement(node);
-    tmp = Cudd_Regular(node);
+    comple = Cudd_IsComplement(bigBDD);
+    tmp = Cudd_Regular(bigBDD);
     std::unordered_map<int, int>::iterator it;
+    p=1.0;
     while (it=qubit_to_state.find(tmp->index), it!=qubit_to_state.end())
     {
         std::cout<<'('<<it->first<<' '<<it->second<<')'<<std::endl;
+        std::cout<<p<<std::endl;
+        node = Cudd_NotCond(tmp, comple);
+        Cudd_Ref(node);
+        // std::cout<<measure_probability(tmp, k/2, nVar,nAnci_fourInt, it->second)<<std::endl;
+        // std::cout<<measure_probability(tmp, k/2, nVar,nAnci_fourInt, !it->second)<<std::endl;
+        
+        p_next = measure_probability(node, k/2, nVar,nAnci_fourInt, it->second) * H_factor * H_factor * normalize_factor * normalize_factor;
+        std::cout<<"p_next="<<p_next<<std::endl;
+        // rus_normalize_factor /= sqrt(p_next);
+        // p*=p_next;
+        p=p_next;
         next_tmp = Cudd_Child(manager, tmp, it->second);
+        Cudd_RecursiveDeref(manager, node);
         if (cuddIsConstant(next_tmp))
         {
             noNode_f = 1;
-            break;
+            std::cout<<"noNode_f"<<std::endl;
+            // break;
+
         }
         if (it->second == 1)
         {
@@ -80,24 +102,221 @@ void Simulator::measure_and_collapse(std::unordered_map<int, int> &qubit_to_stat
             comple ^= Cudd_IsComplement(cuddE(tmp));
             tmp = Cudd_Regular(cuddE(tmp));
         }
-        std::cout<<"update: "<<tmp->index<<std::endl;
     }
-    Cudd_RecursiveDeref(manager, node);
-    std::cout<<noNode_f<<std::endl;
-    std::cout<<tmp->index<<std::endl;
-    //? is it correct?
+    rus_normalize_factor /= sqrt(p);
+    std::cout<<"final p="<<p<<std::endl;
+    std::cout<<"final rus_normalize_factor="<<rus_normalize_factor<<std::endl;
+    tmp = Cudd_ReadOne(manager);
+    Cudd_Ref(tmp);
+    DdNode *tmp2;
+    for(qubit_to_state.begin();it!=qubit_to_state.end();it++){
+        if (it->second)
+            tmp2 = Cudd_bddAnd(manager, Cudd_bddIthVar(manager, it->first), tmp);
+        else
+            tmp2 = Cudd_bddAnd(manager, Cudd_Not(Cudd_bddIthVar(manager, it->first)), tmp);
+        Cudd_Ref(tmp2);
+        Cudd_RecursiveDeref(manager, tmp);
+        tmp = tmp2;
+    }
+
+    int* assigned = new int[n];
+    for(int i=0;i<w;i++){
+        std::string b1, b2, b3, b4;
+        for(int j=0;j<r;j++){
+            assigned[0] = 0;
+            assigned[1] = 0;
+
+            b1 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b1;
+            assigned[1]=1;
+            b2 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b2;
+
+            assigned[0]=1;
+            assigned[1]=0;
+            b3 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b3;
+            assigned[1]=1;
+            b4 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b4;
+        }
+        std::cout<<i<<'/'<<w<<std::endl;
+        std::cout<<b1<<std::endl;
+        std::cout<<b2<<std::endl;
+        std::cout<<b3<<std::endl;
+        std::cout<<b4<<std::endl;
+    }
+
+    for(int i=0;i<w;i++){
+        for(int j=0;j<r;j++){
+            tmp2 = All_Bdd[i][j];
+            // std::cout<<"hellp"<<std::endl;
+            for(it=qubit_to_state.begin();it!=qubit_to_state.end();it++){
+                // std::cout<<it->first<<' '<<it->second<<Cudd_IsComplement(Cudd_bddIthVar(manager, it->first))<<std::endl;
+                if(it->second ^ Cudd_IsComplement(Cudd_bddIthVar(manager, it->first)))
+                    tmp = Cudd_Cofactor(manager, tmp2, Cudd_bddIthVar(manager, it->first));
+                else
+                    tmp = Cudd_Cofactor(manager, tmp2, Cudd_Not(Cudd_bddIthVar(manager, it->first)));
+                Cudd_Ref(tmp);
+                // reset to zero
+                node = Cudd_bddAnd(manager, tmp, Cudd_NotCond(Cudd_bddIthVar(manager, it->first), !Cudd_IsComplement(Cudd_bddIthVar(manager, it->first))));
+                Cudd_Ref(node);
+                Cudd_RecursiveDeref(manager, tmp2);
+                Cudd_RecursiveDeref(manager, tmp);
+                tmp2 = node;
+            }
+            All_Bdd[i][j] = tmp2;
+        }
+    }
+    Cudd_RecursiveDeref(manager, tmp);
+    // Cudd_RecursiveDeref(manager, tmp);
+    Cudd_RecursiveDeref(manager, bigBDD);
+    // Cudd_RecursiveDeref(manager, bigBDD);
+    // Cudd_RecursiveDeref(manager, bigBDD);
+
+    // std::cout<<"update: "<<tmp->index<<std::endl;
+    // Cudd_RecursiveDeref(manager, node);
+    // std::cout<<noNode_f<<std::endl;
+    // std::cout<<tmp->index<<std::endl;
+    // //? is it correct?
+    nodecount();
+    std::cout<<"size"<<(manager->size)<<std::endl;
+
+    for(int i=0;i<w;i++){
+        std::string b1, b2, b3, b4;
+        for(int j=0;j<r;j++){
+            assigned[0] = 0;
+            assigned[1] = 0;
+
+            b1 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b1;
+            assigned[1]=1;
+            b2 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b2;
+
+            assigned[0]=1;
+            assigned[1]=0;
+            b3 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b3;
+            assigned[1]=1;
+            b4 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b4;
+        }
+        std::cout<<i<<'/'<<w<<std::endl;
+        std::cout<<b1<<std::endl;
+        std::cout<<b2<<std::endl;
+        std::cout<<b3<<std::endl;
+        std::cout<<b4<<std::endl;
+    }
+        
+    delete [] assigned;
     
+    // node = (Cudd_NotCond(tmp, comple));
+    // Cudd_Ref(node);
+
+    // /* compute probability of the node */
+    // if (noNode_f)
+    // {
+    //     p=1.0;
+    // }
+    // else
+    // {
+    //     node = (Cudd_NotCond(tmp, comple));
+    //     Cudd_Ref(node);
+    //     p = measure_probability(node, k/2, nVar, nAnci_fourInt, 0)+measure_probability(node, k/2, nVar, nAnci_fourInt, 1);
+    //     p *= H_factor * H_factor * normalize_factor * normalize_factor;
+        
+    //     Cudd_RecursiveDeref(manager, node);
+    //     if (abs(p - 1) > epsilon)
+	// 	{
+    //         std::cerr << "[error]Numerical error: p0 + p1 = " << p << ", not 1" << std::endl;
+	// 		std::exit(1);
+	// 	}
+    // }
+	
+    // double error_tmp = abs(p0 + p1 - 1);
+    // if (error_tmp > error)
+	//     error = error_tmp;
+
+    /* sample */
     
-    node = (Cudd_NotCond(tmp, comple));
-    Cudd_Ref(node);
+        // (*outcome)[index] = '1'; // LSB: qn-1
+    // normalize_factor /= sqrt(p);
+}
 
-    /* compute probability of the node */
-    probability = simple_measure(node, 0)+simple_measure(node, 1);
 
-    p = probability * H_factor * H_factor * normalize_factor * normalize_factor;
+void Simulator::build_bigBDD(int nAnci_oneInt, int nAnci_fourInt){
+    double oneroot2 = 1 / sqrt(2);
+    double H_factor = pow(oneroot2, k%2);
+    int nAnci = nAnci_oneInt + nAnci_fourInt, nnAnci_fourInt = n + nAnci_fourInt, nVar = n + nAnci;
+    DdNode *tmp1, *tmp2, *tmp3;
+    std::cout<<"k="<<k<<std::endl;
+    if (isReorder) Cudd_AutodynDisable(manager);
+    
+    int *arrAnci_fourInt = new int[nAnci_fourInt];
+    for (int i = 0; i < nAnci_fourInt; i++)
+        arrAnci_fourInt[i] = 0;// a bit string
+    int *arrAnci_oneInt = new int[nAnci_oneInt];
+    for (int i = 0; i < nAnci_oneInt; i++)
+        arrAnci_oneInt[i] = 0;// a bit string, record the index of bit(BDD of an integer)?
+    
+    bigBDD = Cudd_Not(Cudd_ReadOne(manager));
+    Cudd_Ref(bigBDD);
+    // * Note that Cudd_bddIthVar will automatically create new nodes if it does not exist.
+    for (int i = 0; i < w; i++)// for all integers
+    {
+        tmp3 = Cudd_Not(Cudd_ReadOne(manager));
+        Cudd_Ref(tmp3);
+        for (int j = 0; j < r; j++)// for all bits
+        {
+            tmp1 = Cudd_ReadOne(manager);
+            Cudd_Ref(tmp1);
+            for (int h = n + nAnci - 1; h >= nnAnci_fourInt; h--)// add ancilla bits with value from arrAnci_fourInt, i.e., BDD's index
+            {
+                if (arrAnci_oneInt[h - nnAnci_fourInt])
+                    tmp2 = Cudd_bddAnd(manager, Cudd_bddIthVar(manager, h), tmp1);
+                else
+                    tmp2 = Cudd_bddAnd(manager, Cudd_Not(Cudd_bddIthVar(manager, h)), tmp1);
+                Cudd_Ref(tmp2);
+                Cudd_RecursiveDeref(manager, tmp1);
+                tmp1 = tmp2;
+            }
+            tmp2 = Cudd_bddAnd(manager, All_Bdd[i][j], tmp1);// AND with the target BDD, i.e., the BDD is (allowed to be) one when the index is assigned to it.
+            Cudd_Ref(tmp2);
+            Cudd_RecursiveDeref(manager, tmp1);
+            // Cudd_RecursiveDeref(manager, All_Bdd[i][j]); // keep these BDDs for statevector after measurement
+            tmp1 = tmp2;
+            tmp2 = Cudd_bddOr(manager, tmp3, tmp1);// OR with this integer/id. I.e., the BDD is one when the var is valid index
+            Cudd_Ref(tmp2);
+            Cudd_RecursiveDeref(manager, tmp1);
+            Cudd_RecursiveDeref(manager, tmp3);
+            tmp3 = tmp2;
+            full_adder_plus_1(nAnci_oneInt, arrAnci_oneInt);
+        }
+        tmp1 = Cudd_ReadOne(manager);
+        Cudd_Ref(tmp1);
+        // similarly, add ancilla bits with value from arrAnci_fourInt(integers' index)
+        for (int j = nnAnci_fourInt - 1; j >= n; j--)
+        {
+            if (arrAnci_fourInt[j - n])
+                tmp2 = Cudd_bddAnd(manager, Cudd_bddIthVar(manager, j), tmp1);
+            else
+                tmp2 = Cudd_bddAnd(manager, Cudd_Not(Cudd_bddIthVar(manager, j)), tmp1);
+            Cudd_Ref(tmp2);
+            Cudd_RecursiveDeref(manager, tmp1);
+            tmp1 = tmp2;
+        }
+        tmp2 = Cudd_bddAnd(manager, tmp3, tmp1);// the BDD is True when valid BDD index and integer index
+        Cudd_Ref(tmp2);
+        Cudd_RecursiveDeref(manager, tmp1);
+        Cudd_RecursiveDeref(manager, tmp3);
+        tmp1 = tmp2;
+        tmp2 = Cudd_bddOr(manager, bigBDD, tmp1);// ORed into the bigBDD
+        Cudd_Ref(tmp2);
+        Cudd_RecursiveDeref(manager, tmp1);
+        Cudd_RecursiveDeref(manager, bigBDD);
+        bigBDD = tmp2;
+        full_adder_plus_1(nAnci_fourInt, arrAnci_fourInt);
+        for (int j = 0; j < nAnci_oneInt; j++) // reset array: not necessary but straightforward
+            arrAnci_oneInt[j] = 0;
+    }
+    nodecount();
 
-    Cudd_RecursiveDeref(manager, node);
-    std::cout<<"p="<<p<<std::endl;
+    
+    delete[] arrAnci_fourInt;
+    delete[] arrAnci_oneInt;
 }
 
 /**Function*************************************************************
@@ -127,7 +346,7 @@ double Simulator::simple_measure(DdNode *node, int edge){
     skip_level = position_child - position_node - 1;
 
 
-    if (false) // constant
+    if (Cudd_IsConstant(child)) // constant
     {
         if (!(Cudd_IsComplement(child))) // constant 1(-1)
         {
@@ -168,8 +387,12 @@ double Simulator::simple_measure(DdNode *node, int edge){
                 int_value = 0;
                 for (int j = 0; j < r; j++) //compute each integer
                 {
-                    tmp = Cudd_bddAnd(manager, child, All_Bdd[i][j]);
+                    tmp = Cudd_bddAnd(manager, node, All_Bdd[i][j]);
                     Cudd_Ref(tmp);
+                    child = Cudd_Child(manager, tmp, edge);
+                    Cudd_Ref(child);
+                    Cudd_RecursiveDeref(manager, tmp);
+                    tmp = child;
                     oneEntry = !(Cudd_IsComplement(tmp));
                     Cudd_RecursiveDeref(manager, tmp);
                     if (j == r - 1)
@@ -236,6 +459,7 @@ double Simulator::measure_probability(DdNode *node, int kd2, int nVar, int nAnci
     }
     else if (Cudd_IsConstant(child)) // constant
     {
+        // std::cout<<"is constant"<<!(Cudd_IsComplement(child))<<std::endl;
         if (!(Cudd_IsComplement(child))) // constant 1
         {
             re = 0;
@@ -271,11 +495,14 @@ double Simulator::measure_probability(DdNode *node, int kd2, int nVar, int nAnci
             for (int i = 0; i < w; i++) //compute each complex value
             {
                 int_value = 0;
+                std::string bitstring = "";
                 for (int j = 0; j < r; j++) //compute each integer
                 {
+                    
                     tmp = Cudd_Eval(manager, child, assign);
                     Cudd_Ref(tmp);
                     oneEntry = !(Cudd_IsComplement(tmp));
+                    bitstring = std::to_string(oneEntry)+bitstring;
                     Cudd_RecursiveDeref(manager, tmp);
                     if (j == r - 1)
                         int_value -= oneEntry * pow(2, j + shift - kd2);
@@ -283,6 +510,8 @@ double Simulator::measure_probability(DdNode *node, int kd2, int nVar, int nAnci
                         int_value += oneEntry * pow(2, j + shift - kd2);
                     full_adder_plus_1_start(nVar, assign, n + nAnci_fourInt);
                 }
+                std::cout<<bitstring<<std::endl;
+                std::cout<<int_value<<std::endl;
                 /* translate to re and im */
                 re += int_value * cos((double) (w - i - 1)/w * PI);
                 im += int_value * sin((double) (w - i - 1)/w * PI);
@@ -295,6 +524,7 @@ double Simulator::measure_probability(DdNode *node, int kd2, int nVar, int nAnci
         }
         else // trace edges
         {
+            std::cout<<"trace edge "<<Cudd_NodeReadIndex(child)<<std::endl;
             then_edge = measure_probability(child, kd2, nVar, nAnci_fourInt, 1);
             else_edge = measure_probability(child, kd2, nVar, nAnci_fourInt, 0);
             probability = then_edge + else_edge;
@@ -360,14 +590,15 @@ void Simulator::measure_one(int index, int kd2, double H_factor, int nVar, int n
         node = (Cudd_NotCond(tmp, comple));
         Cudd_Ref(node);
         p0 = measure_probability(node, kd2, nVar, nAnci_fourInt, 0);
-        p0 *= H_factor * H_factor * normalize_factor * normalize_factor;
+        p0 *= H_factor * H_factor * normalize_factor * normalize_factor * rus_normalize_factor * rus_normalize_factor;
         p1 = measure_probability(node, kd2, nVar, nAnci_fourInt, 1);
-        p1 *= H_factor * H_factor * normalize_factor * normalize_factor;
+        p1 *= H_factor * H_factor * normalize_factor * normalize_factor * rus_normalize_factor * rus_normalize_factor;
         Cudd_RecursiveDeref(manager, node);
         p = p0 + p1;
         if (abs(p - 1) > epsilon)
 		{
             std::cerr << "[error]Numerical error: p0 + p1 = " << p << ", not 1" << std::endl;
+            std::cerr << "rus_normalize_factor="<<rus_normalize_factor<<std::endl;
 			std::exit(1);
 		}
     }

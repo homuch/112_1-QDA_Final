@@ -26,12 +26,12 @@ public:
     // constructor and destructor
     Simulator(int type, int nshots, int seed, int bitSize, bool reorder, bool alloc) :
     n(0), r(bitSize), w(4), k(0), inc(3), shift(0), error(0),
-    normalize_factor(1), gatecount(0), NodeCount(0), isMeasure(0), shots(nshots), isReorder(reorder), isAlloc(alloc)
+    normalize_factor(1),rus_normalize_factor(1), gatecount(0), NodeCount(0), isMeasure(0), shots(nshots), isReorder(reorder), isAlloc(alloc)
     , sim_type(type), statevector("null"), gen(std::default_random_engine(seed)){
     }
     Simulator(int nshots, int seed, int bitSize, bool reorder, bool alloc) :
     n(0), r(bitSize), w(4), k(0), inc(3), shift(0), error(0),
-    normalize_factor(1), gatecount(0), NodeCount(0), isMeasure(0), shots(nshots), isReorder(reorder), isAlloc(alloc)
+    normalize_factor(1),rus_normalize_factor(1), gatecount(0), NodeCount(0), isMeasure(0), shots(nshots), isReorder(reorder), isAlloc(alloc)
     , sim_type(0), statevector("null"), gen(std::default_random_engine(seed)){
     }
     ~Simulator()  {
@@ -87,6 +87,7 @@ private:
     std::vector<std::vector<int>> measured_qubits_to_clbits; // empty if not measured
     std::string measure_outcome;
     double normalize_factor; // normalization factor used in measurement
+    double rus_normalize_factor; // normalization factor used in RUS
     DdNode *bigBDD; // big BDD used if measurement
     std::default_random_engine gen; // random generator
     std::unordered_map<DdNode *, double> Node_Table; // key: node, value: summed prob
@@ -103,6 +104,7 @@ private:
     void measure_one(int position, int kd2, double H_factor, int nVar, int nAnci_fourInt, std::string *outcome);
     void measure_and_collapse(std::unordered_map<int,int>& measured_qubits_to_clbits);
     double simple_measure(DdNode *node, int edge);
+    void build_bigBDD(int nAnci_oneInt, int nAnci_fourInt);
 
     /* misc */
     void init_state(int *constants);
