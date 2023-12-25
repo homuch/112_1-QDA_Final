@@ -56,12 +56,7 @@ void Simulator::measure_and_collapse(std::unordered_map<int, int> &qubit_to_stat
     int noNode_f = 0; //flag: 1 if the node we want to measure is reduced
 
 	double p, p_next;
-    double rand_num;
-    int position_node=-1;
-    double epsilon = 0.001;
-    double then_edge, else_edge, probability;
-    double re, im;
-    DdNode *node, *tmp, *next_tmp;
+    DdNode *node, *tmp;
     
     Cudd_Ref(bigBDD); // if this line is not added, there might be some error in CUDD.
 
@@ -79,14 +74,16 @@ void Simulator::measure_and_collapse(std::unordered_map<int, int> &qubit_to_stat
         // std::cout<<measure_probability(tmp, k/2, nVar,nAnci_fourInt, it->second)<<std::endl;
         // std::cout<<measure_probability(tmp, k/2, nVar,nAnci_fourInt, !it->second)<<std::endl;
         
-        p_next = measure_probability(node, k/2, nVar,nAnci_fourInt, it->second) * H_factor * H_factor * normalize_factor * normalize_factor;
+        p_next = measure_probability(node, k/2, nVar,nAnci_fourInt, it->second) * H_factor *
+             H_factor * normalize_factor * normalize_factor * rus_normalize_factor * rus_normalize_factor;
         std::cout<<"p_next="<<p_next<<std::endl;
         // rus_normalize_factor /= sqrt(p_next);
         // p*=p_next;
-        p=p_next;
-        next_tmp = Cudd_Child(manager, tmp, it->second);
         Cudd_RecursiveDeref(manager, node);
-        if (cuddIsConstant(next_tmp))
+
+        p=p_next;
+        // next_tmp = Cudd_Child(manager, tmp, it->second);
+        if (cuddIsConstant(tmp))
         {
             noNode_f = 1;
             std::cout<<"noNode_f"<<std::endl;
@@ -106,68 +103,72 @@ void Simulator::measure_and_collapse(std::unordered_map<int, int> &qubit_to_stat
     rus_normalize_factor /= sqrt(p);
     std::cout<<"final p="<<p<<std::endl;
     std::cout<<"final rus_normalize_factor="<<rus_normalize_factor<<std::endl;
-    tmp = Cudd_ReadOne(manager);
-    Cudd_Ref(tmp);
+    // tmp = Cudd_ReadOne(manager);
+    // Cudd_Ref(tmp);
     DdNode *tmp2;
-    for(qubit_to_state.begin();it!=qubit_to_state.end();it++){
-        if (it->second)
-            tmp2 = Cudd_bddAnd(manager, Cudd_bddIthVar(manager, it->first), tmp);
-        else
-            tmp2 = Cudd_bddAnd(manager, Cudd_Not(Cudd_bddIthVar(manager, it->first)), tmp);
-        Cudd_Ref(tmp2);
-        Cudd_RecursiveDeref(manager, tmp);
-        tmp = tmp2;
-    }
+    // for(qubit_to_state.begin();it!=qubit_to_state.end();it++){
+    //     if (it->second)
+    //         tmp2 = Cudd_bddAnd(manager, Cudd_bddIthVar(manager, it->first), tmp);
+    //     else
+    //         tmp2 = Cudd_bddAnd(manager, Cudd_Not(Cudd_bddIthVar(manager, it->first)), tmp);
+    //     Cudd_Ref(tmp2);
+    //     Cudd_RecursiveDeref(manager, tmp);
+    //     tmp = tmp2;
+    // }
 
-    int* assigned = new int[n];
-    for(int i=0;i<w;i++){
-        std::string b1, b2, b3, b4;
-        for(int j=0;j<r;j++){
-            assigned[0] = 0;
-            assigned[1] = 0;
+    // int* assigned = new int[n];
+    // for(int i=0;i<w;i++){
+    //     std::string b1, b2, b3, b4;
+    //     for(int j=0;j<r;j++){
+    //         assigned[0] = 0;
+    //         assigned[1] = 0;
 
-            b1 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b1;
-            assigned[1]=1;
-            b2 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b2;
+    //         b1 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b1;
+    //         assigned[1]=1;
+    //         b2 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b2;
 
-            assigned[0]=1;
-            assigned[1]=0;
-            b3 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b3;
-            assigned[1]=1;
-            b4 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b4;
-        }
-        std::cout<<i<<'/'<<w<<std::endl;
-        std::cout<<b1<<std::endl;
-        std::cout<<b2<<std::endl;
-        std::cout<<b3<<std::endl;
-        std::cout<<b4<<std::endl;
-    }
+    //         assigned[0]=1;
+    //         assigned[1]=0;
+    //         b3 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b3;
+    //         assigned[1]=1;
+    //         b4 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b4;
+    //     }
+    //     std::cout<<i<<'/'<<w<<std::endl;
+    //     std::cout<<b1<<std::endl;
+    //     std::cout<<b2<<std::endl;
+    //     std::cout<<b3<<std::endl;
+    //     std::cout<<b4<<std::endl;
+    // }
 
-    for(int i=0;i<w;i++){
-        for(int j=0;j<r;j++){
-            tmp2 = All_Bdd[i][j];
-            // std::cout<<"hellp"<<std::endl;
-            for(it=qubit_to_state.begin();it!=qubit_to_state.end();it++){
-                // std::cout<<it->first<<' '<<it->second<<Cudd_IsComplement(Cudd_bddIthVar(manager, it->first))<<std::endl;
-                if(it->second ^ Cudd_IsComplement(Cudd_bddIthVar(manager, it->first)))
-                    tmp = Cudd_Cofactor(manager, tmp2, Cudd_bddIthVar(manager, it->first));
-                else
-                    tmp = Cudd_Cofactor(manager, tmp2, Cudd_Not(Cudd_bddIthVar(manager, it->first)));
-                Cudd_Ref(tmp);
-                // reset to zero
-                node = Cudd_bddAnd(manager, tmp, Cudd_NotCond(Cudd_bddIthVar(manager, it->first), !Cudd_IsComplement(Cudd_bddIthVar(manager, it->first))));
-                Cudd_Ref(node);
-                Cudd_RecursiveDeref(manager, tmp2);
-                Cudd_RecursiveDeref(manager, tmp);
-                tmp2 = node;
-            }
-            All_Bdd[i][j] = tmp2;
-        }
-    }
-    Cudd_RecursiveDeref(manager, tmp);
+    // for(int i=0;i<w;i++){
+    //     for(int j=0;j<r;j++){
+    //         tmp2 = All_Bdd[i][j];
+    //         // std::cout<<"hellp"<<std::endl;
+    //         for(it=qubit_to_state.begin();it!=qubit_to_state.end();it++){
+    //             // std::cout<<it->first<<' '<<it->second<<Cudd_IsComplement(Cudd_bddIthVar(manager, it->first))<<std::endl;
+    //             if(it->second ^ Cudd_IsComplement(Cudd_bddIthVar(manager, it->first)))
+    //                 tmp = Cudd_Cofactor(manager, tmp2, Cudd_bddIthVar(manager, it->first));
+    //             else
+    //                 tmp = Cudd_Cofactor(manager, tmp2, Cudd_Not(Cudd_bddIthVar(manager, it->first)));
+    //             Cudd_Ref(tmp);
+    //             // reset to zero
+    //             node = Cudd_bddAnd(manager, tmp, Cudd_NotCond(Cudd_bddIthVar(manager, it->first), !Cudd_IsComplement(Cudd_bddIthVar(manager, it->first))));
+    //             Cudd_Ref(node);
+    //             Cudd_RecursiveDeref(manager, tmp2);
+    //             Cudd_RecursiveDeref(manager, tmp);
+    //             tmp2 = node;
+    //         }
+    //         All_Bdd[i][j] = tmp2;
+    //     }
+    // }
     // Cudd_RecursiveDeref(manager, tmp);
+    // Cudd_RecursiveDeref(manager, tmp);
+    collapse_to(qubit_to_state, true);
+    std::cout<<"bigBDD "<<bigBDD->ref<<std::endl;
     Cudd_RecursiveDeref(manager, bigBDD);
-    // Cudd_RecursiveDeref(manager, bigBDD);
+    Cudd_RecursiveDeref(manager, bigBDD);
+    std::cout<<"bigBDD "<<bigBDD->ref<<std::endl;
+
     // Cudd_RecursiveDeref(manager, bigBDD);
 
     // std::cout<<"update: "<<tmp->index<<std::endl;
@@ -178,30 +179,30 @@ void Simulator::measure_and_collapse(std::unordered_map<int, int> &qubit_to_stat
     nodecount();
     std::cout<<"size"<<(manager->size)<<std::endl;
 
-    for(int i=0;i<w;i++){
-        std::string b1, b2, b3, b4;
-        for(int j=0;j<r;j++){
-            assigned[0] = 0;
-            assigned[1] = 0;
+    // for(int i=0;i<w;i++){
+    //     std::string b1, b2, b3, b4;
+    //     for(int j=0;j<r;j++){
+    //         assigned[0] = 0;
+    //         assigned[1] = 0;
 
-            b1 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b1;
-            assigned[1]=1;
-            b2 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b2;
+    //         b1 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b1;
+    //         assigned[1]=1;
+    //         b2 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b2;
 
-            assigned[0]=1;
-            assigned[1]=0;
-            b3 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b3;
-            assigned[1]=1;
-            b4 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b4;
-        }
-        std::cout<<i<<'/'<<w<<std::endl;
-        std::cout<<b1<<std::endl;
-        std::cout<<b2<<std::endl;
-        std::cout<<b3<<std::endl;
-        std::cout<<b4<<std::endl;
-    }
+    //         assigned[0]=1;
+    //         assigned[1]=0;
+    //         b3 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b3;
+    //         assigned[1]=1;
+    //         b4 = std::to_string(!Cudd_IsComplement(Cudd_Eval(manager, All_Bdd[i][j], assigned)))+b4;
+    //     }
+    //     std::cout<<i<<'/'<<w<<std::endl;
+    //     std::cout<<b1<<std::endl;
+    //     std::cout<<b2<<std::endl;
+    //     std::cout<<b3<<std::endl;
+    //     std::cout<<b4<<std::endl;
+    // }
         
-    delete [] assigned;
+    // delete [] assigned;
     
     // node = (Cudd_NotCond(tmp, comple));
     // Cudd_Ref(node);
@@ -317,6 +318,49 @@ void Simulator::build_bigBDD(int nAnci_oneInt, int nAnci_fourInt){
     
     delete[] arrAnci_fourInt;
     delete[] arrAnci_oneInt;
+}
+/**Function*************************************************************
+
+  Synopsis    [collapse to a specific state]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+void Simulator::collapse_to(std::unordered_map<int, int>& qubit_to_state, bool reset_to_zero){
+    DdNode *node, *tmp, *tmp2;
+    std::unordered_map<int, int>::iterator it;
+    for(int i=0;i<w;i++){
+        for(int j=0;j<r;j++){
+            tmp2 = All_Bdd[i][j];
+            // std::cout<<"hellp"<<std::endl;
+            for(it=qubit_to_state.begin();it!=qubit_to_state.end();it++){
+                // std::cout<<it->first<<' '<<it->second<<Cudd_IsComplement(Cudd_bddIthVar(manager, it->first))<<std::endl;
+                if(it->second ^ Cudd_IsComplement(Cudd_bddIthVar(manager, it->first)))
+                    tmp = Cudd_Cofactor(manager, tmp2, Cudd_bddIthVar(manager, it->first));
+                else
+                    tmp = Cudd_Cofactor(manager, tmp2, Cudd_Not(Cudd_bddIthVar(manager, it->first)));
+                Cudd_Ref(tmp);
+                // reset to zero
+                if(reset_to_zero)
+                    node = Cudd_bddAnd(manager, tmp, Cudd_NotCond(Cudd_bddIthVar(manager, it->first),
+                     !Cudd_IsComplement(Cudd_bddIthVar(manager, it->first))));
+                else
+                    node = Cudd_bddAnd(manager, tmp, Cudd_NotCond(Cudd_bddIthVar(manager, it->first), 
+                        !(it->second^Cudd_IsComplement(Cudd_bddIthVar(manager, it->first)))));
+
+                Cudd_Ref(node);
+                Cudd_RecursiveDeref(manager, tmp2);
+                Cudd_RecursiveDeref(manager, tmp);
+                tmp2 = node;
+            }
+            All_Bdd[i][j] = tmp2;
+        }
+    }
+    Cudd_RecursiveDeref(manager, tmp);
 }
 
 /**Function*************************************************************
