@@ -946,9 +946,9 @@ void Simulator::getStatevector()
             }
             
             mpf_div(tmp_float, re, H_factor);            
-            final_re = mpf_get_d(tmp_float) * normalize_factor;
+            final_re = mpf_get_d(tmp_float) * normalize_factor * rus_normalize_factor;
             mpf_div(tmp_float, im, H_factor);
-            final_im = mpf_get_d(tmp_float) * normalize_factor;
+            final_im = mpf_get_d(tmp_float) * normalize_factor * rus_normalize_factor;
         }
 
         if ((final_re == 0)&&(final_im == 0))
