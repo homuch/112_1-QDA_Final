@@ -79,7 +79,7 @@ void Simulator::sim_qasm_file(std::string qasm)
                 getline(inStr_ss, inStr, '[');
                 while(getline(inStr_ss, inStr, ']'))
                 {
-                    std::cout<<inStr<<std::endl;
+                    // std::cout<<inStr<<std::endl;
                     buffer.push_back(stoi(inStr));
                     getline(inStr_ss, inStr, '[');
                 }
