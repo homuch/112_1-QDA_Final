@@ -1,6 +1,6 @@
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
-CFLAGS = -I $(ROOT_DIR)/cudd/cudd -I $(ROOT_DIR)/cudd/util -I $(ROOT_DIR)/cudd/
+CFLAGS = -std=c++11 -I $(ROOT_DIR)/cudd/cudd -I $(ROOT_DIR)/cudd/util -I $(ROOT_DIR)/cudd/ 
 LFLAGS = -static -L $(ROOT_DIR)/cudd/cudd/.libs/ -lcudd -lm -lboost_program_options  -lgmpxx -lgmp
 
 CXX = g++
