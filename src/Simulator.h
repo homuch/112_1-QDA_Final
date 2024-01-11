@@ -103,7 +103,6 @@ private:
     double measure_probability(DdNode *node, int kd2, int nVar, int nAnci_fourInt, int edge);
     void measure_one(int position, int kd2, double H_factor, int nVar, int nAnci_fourInt, std::string *outcome);
     void measure_and_collapse(std::unordered_map<int,int>& measured_qubits_to_clbits);
-    double simple_measure(DdNode *node, int edge);
     void build_bigBDD(int nAnci_oneInt, int nAnci_fourInt);
     void collapse_to(std::unordered_map<int, int>& qubit_to_state, bool reset_to_zero=true);
 
