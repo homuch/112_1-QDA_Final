@@ -17,12 +17,27 @@ void Simulator::init_simulator(int nQubits)
 {
     n = nQubits; // set the number n here
     manager = Cudd_Init(n, n, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0);
+
     int *constants = new int[n];
     for (int i = 0; i < n; i++)
-        constants[i] = 0; // TODO: costom initial state
+        constants[i] = 0; // TODO: custom initial state
     measured_qubits_to_clbits = std::vector<std::vector<int>>(n, std::vector<int>(0));
-    init_state(constants);
+
+    // Test initial state
+    int state_k = 1;
+    std::vector<std::vector<int>> state_matrix(w, std::vector<int>(pow(2,n),0));
+    state_matrix[3][0] = 1;
+    state_matrix[3][3] = 1;
+
+    // Initialize the state
+    bool is_testing = true;
+    if (is_testing)
+        init_state_by_matrix(state_k,state_matrix);
+    else
+        init_state(constants);
+
     delete[] constants;
+    state_matrix.clear();
     if (isReorder) Cudd_AutodynEnable(manager, CUDD_REORDER_SYMM_SIFT);
 }
 
@@ -59,7 +74,7 @@ void Simulator::sim_qasm_file(std::string qasm)
             {
                 getline(inStr_ss, inStr, '[');
                 getline(inStr_ss, inStr, ']');
-                nClbits = stoi(inStr);                
+                nClbits = stoi(inStr);
             }
             else if (inStr == "OPENQASM"){;}
             else if (inStr == "include"){;}
@@ -247,7 +262,7 @@ void Simulator::sim_qasm_file(std::string qasm)
 void Simulator::sim_qasm(std::string qasm)
 {
     sim_qasm_file(qasm); // simulate
-    
+
     if (sim_type == 0 && isMeasure == 0)
     {
         std::cout << "Error: no measurement detected. Cannot do sampling.\n" << std::flush;
@@ -263,14 +278,14 @@ void Simulator::sim_qasm(std::string qasm)
                 shots = 1;
                 std::cout << "Warning: shot number is limited to 1 in all_amplitude mode.\n" << std::flush;
             }
-        }    
-        else 
+        }
+        else
         {
             if (shots != 1)
             {
                 std::cout << "Warning: no measurement detected. The --shots argument is ignored.\n" << std::flush;
             }
-        }  
+        }
     }
 
     // measure based on simulator type
@@ -306,7 +321,7 @@ void Simulator::print_results()
 {
     // write output string based on state_count and statevector
     std::unordered_map<std::string, int>::iterator it;
-    
+
     run_output = "{";
     if (state_count.begin() != state_count.end()){
         run_output += "\"counts\": { ";
@@ -318,8 +333,8 @@ void Simulator::print_results()
                 run_output = run_output + "\"" + it->first + "\": " + std::to_string(it->second) + ", ";
         }
         run_output += " }";
-        run_output += (statevector != "null") ? ", " : ""; 
-    }    
+        run_output += (statevector != "null") ? ", " : "";
+    }
 
     run_output += (statevector != "null") ? "\"statevector\": " + statevector + " }" : " }";
     //return;

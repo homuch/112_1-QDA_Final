@@ -103,6 +103,7 @@ private:
 
     /* misc */
     void init_state(int *constants);
+    void init_state_by_matrix(int state_k, std::vector<std::vector<int>>& state);
     void alloc_BDD(DdNode ***Bdd, bool extend);
     void dropLSB(DdNode ***Bdd);
     int overflow3(DdNode *g, DdNode *h, DdNode *crin);
