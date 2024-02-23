@@ -23,21 +23,10 @@ void Simulator::init_simulator(int nQubits)
         constants[i] = 0; // TODO: custom initial state
     measured_qubits_to_clbits = std::vector<std::vector<int>>(n, std::vector<int>(0));
 
-    // Test initial state
-    int state_k = 1;
-    std::vector<std::vector<int>> state_matrix(w, std::vector<int>(pow(2,n),0));
-    state_matrix[3][0] = 1;
-    state_matrix[3][3] = 1;
-
     // Initialize the state
-    bool is_testing = true;
-    if (is_testing)
-        init_state_by_matrix(state_k,state_matrix);
-    else
-        init_state(constants);
+    init_state(constants);
 
     delete[] constants;
-    state_matrix.clear();
     if (isReorder) Cudd_AutodynEnable(manager, CUDD_REORDER_SYMM_SIFT);
 }
 
@@ -88,6 +77,61 @@ void Simulator::sim_qasm_file(std::string qasm)
                 getline(inStr_ss, inStr, ']');
                 int cIndex = stoi(inStr);
                 measure(qIndex, cIndex);
+            }
+            else if (inStr == "initial_state") // Add initial state
+            {
+                // Construct the initial state matrix
+                const int INITIAL_STATE_PRECISION = 20;
+                int state_k = INITIAL_STATE_PRECISION*2;
+                std::vector<std::vector<int>> state_matrix(w, std::vector<int>(pow(2,n),0));
+                for (int i = 0 ; i < pow(2,n) ; i++)
+                {
+                    // Read the coefficient of the i-th basis state
+                    getline(inFile_ss, inStr);
+
+                    // Get the real and imaginary part
+                    std::string doubleStr;
+                    std::stringstream inDouble_ss(inStr);
+                    double real_part, imag_part;
+                    bool use_minus_delimiter = false;
+                    bool neg_real = false, neg_imag = false;
+
+                    // Determine whether the real or imaginary part is negative
+                    if (inStr[0] == '-')
+                    {
+                        neg_real = true;
+                        inDouble_ss.str(inStr.substr(1));
+                    }
+                    else if (inStr[0] == '+')
+                    {
+                        inDouble_ss.str(inStr.substr(1));
+                    }
+                    if (inDouble_ss.str().find_first_of('-') != std::string::npos)
+                    {
+                        use_minus_delimiter = true;
+                        neg_imag = true;
+                    }
+
+                    // Split the string to obtain the real and imaginary part
+                    if (use_minus_delimiter)
+                        getline(inDouble_ss, doubleStr, '-');
+                    else
+                        getline(inDouble_ss, doubleStr, '+');
+                    real_part = (neg_real)? -stod(doubleStr) : stod(doubleStr);
+                    getline(inDouble_ss, doubleStr, 'i');
+                    imag_part = (neg_imag)? -stod(doubleStr) : stod(doubleStr);
+
+                    // Add the read coefficient to the initial state matrix
+                    // real part to d, imaginary part to b
+                    state_matrix[3][i] = int(std::round(real_part*pow(2,INITIAL_STATE_PRECISION)));
+                    state_matrix[1][i] = int(std::round(imag_part*pow(2,INITIAL_STATE_PRECISION)));
+                }
+
+                // Add initial state
+                init_state_by_matrix(state_k,state_matrix);
+
+                // Delete the initial state matrix
+                state_matrix.clear();
             }
             else
             {
