@@ -7,7 +7,7 @@
 To build the simulator, one needs to first configure `CUDD`:
 ```commandline
 cd cudd
-./configure --enable-dddmp --enable-obj --enable-shared --enable-static 
+./configure --enable-dddmp --enable-obj --enable-shared --enable-static
 cd ..
 ```
 Next, build the binary file `SliQSim`:
@@ -16,7 +16,7 @@ make
 ```
 
 ## Execution
-The circuit format being simulated is `OpenQASM` used by IBM's [Qiskit](https://github.com/Qiskit/qiskit), and the gate set supported in this simulator now contains Pauli-X (x), Pauli-Y (y), Pauli-Z (z), Hadamard (h), Phase and its inverse (s and sdg), π/8 and its inverse (t and tdg), Rotation-X with phase π/2 (rx(pi/2)), Rotation-Y with phase π/2 (ry(pi/2)), Controlled-NOT (cx), Controlled-Z (cz), Toffoli (ccx and mcx), SWAP (swap), and Fredkin (cswap). One can find some example benchmarks in [examples](https://github.com/NTU-ALComLab/SliQSim/tree/master/examples) folder. 
+The circuit format being simulated is `OpenQASM` used by IBM's [Qiskit](https://github.com/Qiskit/qiskit), and the gate set supported in this simulator now contains Pauli-X (x), Pauli-Y (y), Pauli-Z (z), Hadamard (h), Phase and its inverse (s and sdg), π/8 and its inverse (t and tdg), Rotation-X with phase π/2 (rx(pi/2)), Rotation-Y with phase π/2 (ry(pi/2)), Controlled-NOT (cx), Controlled-Z (cz), Toffoli (ccx and mcx), SWAP (swap), and Fredkin (cswap). One can find some example benchmarks in [examples](https://github.com/NTU-ALComLab/SliQSim/tree/master/examples) folder.
 
 For simulation types, we provide both "sampling" and "all_amplitude" simulation options. The help message states the details:
 
@@ -28,8 +28,8 @@ Options:
 --seed [=arg(=1)]     seed for random number generator
 --print_info          print simulation statistics such as runtime, memory, etc.
 --type arg (=0)       the simulation type being executed.
-                      0: sampling mode (default option), where the sampled outcomes will be provided. 
-                      1: all_amplitude mode, where the final state vector will be shown. 
+                      0: sampling mode (default option), where the sampled outcomes will be provided.
+                      1: all_amplitude mode, where the final state vector will be shown.
 --shots arg (=1)      the number of outcomes being sampled in "sampling mode" .
 --r arg (=32)         integer bit size.
 --reorder arg (=1)    allow variable reordering or not.
@@ -52,7 +52,7 @@ Then the sampled results will be shown:
 { "counts": { "11": 542, "00": 482 } }
 ```
 
-If option `--print_info` is used, simulation statistics such as runtime and memory usage will also be provided: 
+If option `--print_info` is used, simulation statistics such as runtime and memory usage will also be provided:
 ```commandline
   Runtime: 0.014433 seconds
   Peak memory usage: 12611584 bytes
@@ -85,8 +85,8 @@ Please cite the following paper if you use our simulator for your research:
 ```bibtex
 @INPROCEEDINGS{9586191,
   author={Tsai, Yuan-Hung and Jiang, Jie-Hong R. and Jhang, Chiao-Shan},
-  booktitle={Design Automation Conference (DAC)}, 
-  title={Bit-Slicing the Hilbert Space: Scaling Up Accurate Quantum Circuit Simulation}, 
+  booktitle={Design Automation Conference (DAC)},
+  title={Bit-Slicing the Hilbert Space: Scaling Up Accurate Quantum Circuit Simulation},
   year={2021},
   pages={439-444},
   doi={10.1109/DAC18074.2021.9586191}
@@ -95,3 +95,17 @@ Please cite the following paper if you use our simulator for your research:
 
 ## Contact
 If you have any questions or suggestions, feel free to [create an issue](https://github.com/NTU-ALComLab/SliQSim/issues), or contact us through matthewyhtsai@gmail.com.
+
+## Project : SliQSim on QAOA
+
+First, make and compile the SliQSim executable.
+
+Then run QAOA.py (need pennylane package) (to test the code you can set use_outer_simulator to False)
+
+Currently working :
+
+1. Combine SliQSim and RUS : We wish to deal with the following line in the QAOA qasm file : **rz(0.1) q[0];**. We will precompile the RUS circuits in the folder */rus/precompile* first. Then there are at least two ways to combine them. The first way is
+directly read in the command rz(0.1) q[0]; and the SliQSim code can find the nearest angle among the precompile file and perform RUS for it (You may add the option --rus to indicate the use of RUS).
+The second way is find the nearest angle among the precompile file in the QAOA.py python code and write the corresponding circuit into the qasm file that will be executed by SliQSim.
+
+2. Find the way to update parameters with SliQSim : Currently the performance of SliQSim is bad (not getting good solution). Need to find a good way to update parameters (such as the way to compute gradient, the choice of the stepsize etc.)
