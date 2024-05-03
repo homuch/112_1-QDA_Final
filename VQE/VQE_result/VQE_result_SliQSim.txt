@@ -1,0 +1,304 @@
+16
+Iter:     1 | Cost: 0.6605857 | Acc train: 0.5333333 | Acc validation: 0.6000000 
+Iter:     2 | Cost: 0.4460823 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     3 | Cost: 0.3503407 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:     4 | Cost: 0.3096189 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:     5 | Cost: 0.4179153 | Acc train: 0.9200000 | Acc validation: 0.9200000 
+Iter:     6 | Cost: 0.2853335 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:     7 | Cost: 0.2296697 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:     8 | Cost: 0.2494551 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:     9 | Cost: 0.4858579 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    10 | Cost: 0.3434737 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    11 | Cost: 0.3750257 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    12 | Cost: 0.3082024 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    13 | Cost: 0.2270046 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    14 | Cost: 0.3589307 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    15 | Cost: 0.2017549 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    16 | Cost: 0.1671846 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    17 | Cost: 0.4043699 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    18 | Cost: 0.2916876 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    19 | Cost: 0.9653175 | Acc train: 0.5200000 | Acc validation: 0.4000000 
+Iter:    20 | Cost: 0.2548736 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    21 | Cost: 0.2630272 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    22 | Cost: 0.8465590 | Acc train: 0.6000000 | Acc validation: 0.4000000 
+Iter:    23 | Cost: 0.3717133 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    24 | Cost: 0.3575107 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    25 | Cost: 0.3205660 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    26 | Cost: 0.4376246 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    27 | Cost: 0.3266492 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    28 | Cost: 0.4125282 | Acc train: 0.9733333 | Acc validation: 0.9600000 
+Iter:    29 | Cost: 0.4593849 | Acc train: 0.9600000 | Acc validation: 0.8800000 
+Iter:    30 | Cost: 0.3296977 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    31 | Cost: 0.5340121 | Acc train: 0.7333333 | Acc validation: 0.6400000 
+Iter:    32 | Cost: 0.2715338 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    33 | Cost: 0.4996412 | Acc train: 0.8533333 | Acc validation: 0.8800000 
+Iter:    34 | Cost: 0.3439495 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    35 | Cost: 0.3177906 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    36 | Cost: 0.2149160 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    37 | Cost: 0.1909564 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    38 | Cost: 0.5823209 | Acc train: 0.6400000 | Acc validation: 0.6400000 
+Iter:    39 | Cost: 0.3943222 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    40 | Cost: 0.4120314 | Acc train: 0.9866667 | Acc validation: 0.9600000 
+Iter:    41 | Cost: 0.6492046 | Acc train: 0.9866667 | Acc validation: 0.9600000 
+Iter:    42 | Cost: 0.8588058 | Acc train: 0.5333333 | Acc validation: 0.4000000 
+Iter:    43 | Cost: 0.6102634 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    44 | Cost: 0.5026539 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    45 | Cost: 0.4626144 | Acc train: 0.9866667 | Acc validation: 0.9600000 
+Iter:    46 | Cost: 0.2259039 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    47 | Cost: 0.1772193 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    48 | Cost: 0.2432367 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    49 | Cost: 0.1581609 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    50 | Cost: 0.4363457 | Acc train: 0.9333333 | Acc validation: 0.9600000 
+Iter:    51 | Cost: 0.2423733 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    52 | Cost: 0.2161215 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    53 | Cost: 0.2098108 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    54 | Cost: 0.4145847 | Acc train: 0.9866667 | Acc validation: 0.9600000 
+Iter:    55 | Cost: 0.2631581 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    56 | Cost: 0.1930454 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    57 | Cost: 0.4534910 | Acc train: 0.9466667 | Acc validation: 0.9200000 
+Iter:    58 | Cost: 0.3666728 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    59 | Cost: 0.2591397 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    60 | Cost: 0.3127439 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    61 | Cost: 0.2282600 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    62 | Cost: 0.3207145 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    63 | Cost: 0.5976808 | Acc train: 0.6133333 | Acc validation: 0.7200000 
+Iter:    64 | Cost: 0.3597989 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    65 | Cost: 0.4572119 | Acc train: 0.9733333 | Acc validation: 0.9200000 
+Iter:    66 | Cost: 0.2882906 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    67 | Cost: 0.2895960 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    68 | Cost: 0.1634202 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    69 | Cost: 0.2934891 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    70 | Cost: 0.5488953 | Acc train: 0.7066667 | Acc validation: 0.6000000 
+Iter:    71 | Cost: 0.4518178 | Acc train: 0.9333333 | Acc validation: 0.9200000 
+Iter:    72 | Cost: 0.3892462 | Acc train: 0.9866667 | Acc validation: 0.9600000 
+Iter:    73 | Cost: 0.4291920 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    74 | Cost: 0.5330659 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    75 | Cost: 0.3530717 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    76 | Cost: 0.2458641 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    77 | Cost: 0.1696228 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    78 | Cost: 0.6687691 | Acc train: 0.6533333 | Acc validation: 0.6000000 
+Iter:    79 | Cost: 0.3961226 | Acc train: 0.9733333 | Acc validation: 1.0000000 
+Iter:    80 | Cost: 0.3092080 | Acc train: 0.9733333 | Acc validation: 1.0000000 
+3613.3382136821747
+32
+Iter:     1 | Cost: 0.5434505 | Acc train: 0.9466667 | Acc validation: 0.9200000 
+Iter:     2 | Cost: 0.3827448 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     3 | Cost: 0.3833597 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     4 | Cost: 0.3200932 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     5 | Cost: 0.3200039 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:     6 | Cost: 0.2847075 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:     7 | Cost: 0.2666566 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     8 | Cost: 0.3308750 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:     9 | Cost: 0.2376244 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    10 | Cost: 0.2286337 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    11 | Cost: 0.2288861 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    12 | Cost: 0.1884280 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    13 | Cost: 0.2462746 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    14 | Cost: 0.1806482 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    15 | Cost: 0.1419526 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    16 | Cost: 0.0978500 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    17 | Cost: 0.2748569 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    18 | Cost: 0.2304687 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    19 | Cost: 0.2154590 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    20 | Cost: 0.1804083 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    21 | Cost: 0.1341064 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    22 | Cost: 0.1451864 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    23 | Cost: 0.1305165 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    24 | Cost: 0.1882732 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    25 | Cost: 0.1305565 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    26 | Cost: 0.1694514 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    27 | Cost: 0.1265769 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    28 | Cost: 0.1777333 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    29 | Cost: 0.1223856 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    30 | Cost: 0.1192135 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    31 | Cost: 0.1707653 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    32 | Cost: 0.1272213 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    33 | Cost: 0.2557336 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    34 | Cost: 0.1498868 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    35 | Cost: 0.1263698 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    36 | Cost: 0.1318310 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    37 | Cost: 0.1329471 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    38 | Cost: 0.1846337 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    39 | Cost: 0.1551269 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    40 | Cost: 0.1178582 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    41 | Cost: 0.1030184 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    42 | Cost: 0.1099927 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    43 | Cost: 0.1305975 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    44 | Cost: 0.1107332 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    45 | Cost: 0.2254777 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    46 | Cost: 0.1195354 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    47 | Cost: 0.0915191 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    48 | Cost: 0.0889332 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    49 | Cost: 0.0821414 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    50 | Cost: 0.1286611 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    51 | Cost: 0.1475984 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    52 | Cost: 0.1398110 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    53 | Cost: 0.2782723 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    54 | Cost: 0.4082118 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    55 | Cost: 0.2395775 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    56 | Cost: 0.1937740 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    57 | Cost: 0.4099227 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    58 | Cost: 0.3680383 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    59 | Cost: 0.2640714 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    60 | Cost: 0.2797602 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    61 | Cost: 0.2002295 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    62 | Cost: 0.2827279 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    63 | Cost: 0.2113523 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    64 | Cost: 0.2426589 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    65 | Cost: 0.2136287 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    66 | Cost: 0.1951111 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    67 | Cost: 0.2292858 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    68 | Cost: 0.1952066 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    69 | Cost: 0.1661210 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    70 | Cost: 0.2296371 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    71 | Cost: 0.1779063 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    72 | Cost: 0.1502634 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    73 | Cost: 0.1827058 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    74 | Cost: 0.1899798 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    75 | Cost: 0.1763078 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    76 | Cost: 0.1804589 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    77 | Cost: 0.1472011 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    78 | Cost: 0.2214347 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    79 | Cost: 0.3110901 | Acc train: 0.9600000 | Acc validation: 0.9200000 
+Iter:    80 | Cost: 0.2184047 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+23965.249247789383
+64
+Iter:     1 | Cost: 0.5796396 | Acc train: 0.9066667 | Acc validation: 0.8400000 
+Iter:     2 | Cost: 0.4996137 | Acc train: 0.9733333 | Acc validation: 0.9600000 
+Iter:     3 | Cost: 0.4246009 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     4 | Cost: 0.3561171 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     5 | Cost: 0.3919495 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     6 | Cost: 0.3857752 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     7 | Cost: 0.3577709 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     8 | Cost: 0.3751032 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     9 | Cost: 0.3375949 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    10 | Cost: 0.3320928 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    11 | Cost: 0.2835068 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    12 | Cost: 0.2717702 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    13 | Cost: 0.2635322 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    14 | Cost: 0.2475432 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    15 | Cost: 0.2460050 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    16 | Cost: 0.2134169 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    17 | Cost: 0.2602727 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    18 | Cost: 0.2237658 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    19 | Cost: 0.2137720 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    20 | Cost: 0.2064659 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    21 | Cost: 0.1592613 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    22 | Cost: 0.1843799 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    23 | Cost: 0.1790065 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    24 | Cost: 0.1882461 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    25 | Cost: 0.1607032 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    26 | Cost: 0.1301549 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    27 | Cost: 0.1160118 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    28 | Cost: 0.0989060 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    29 | Cost: 0.1102485 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    30 | Cost: 0.1036773 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    31 | Cost: 0.1461293 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    32 | Cost: 0.1500193 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    33 | Cost: 0.1214345 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    34 | Cost: 0.1187852 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    35 | Cost: 0.1322575 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    36 | Cost: 0.1165257 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    37 | Cost: 0.0951738 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    38 | Cost: 0.0850250 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    39 | Cost: 0.1070507 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    40 | Cost: 0.1571936 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    41 | Cost: 0.1239309 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    42 | Cost: 0.1655765 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    43 | Cost: 0.1364643 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    44 | Cost: 0.1250058 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    45 | Cost: 0.1216774 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    46 | Cost: 0.0943108 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    47 | Cost: 0.0928074 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    48 | Cost: 0.0957856 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    49 | Cost: 0.0929545 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    50 | Cost: 0.1000537 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    51 | Cost: 0.0922444 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    52 | Cost: 0.0867625 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    53 | Cost: 0.0969815 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    54 | Cost: 0.1103001 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    55 | Cost: 0.1031488 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    56 | Cost: 0.0969469 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    57 | Cost: 0.1110683 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    58 | Cost: 0.1208105 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    59 | Cost: 0.1021743 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    60 | Cost: 0.0972792 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    61 | Cost: 0.0947021 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    62 | Cost: 0.1127557 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    63 | Cost: 0.1143861 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    64 | Cost: 0.1116954 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    65 | Cost: 0.1325550 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    66 | Cost: 0.1221133 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    67 | Cost: 0.1151595 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    68 | Cost: 0.1257838 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    69 | Cost: 0.1126593 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    70 | Cost: 0.1067768 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    71 | Cost: 0.1006843 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    72 | Cost: 0.0896868 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    73 | Cost: 0.1338766 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    74 | Cost: 0.1111486 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    75 | Cost: 0.1132521 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    76 | Cost: 0.1009738 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    77 | Cost: 0.0958042 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    78 | Cost: 0.1096442 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    79 | Cost: 0.1076520 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    80 | Cost: 0.0988370 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+24766.43993115425
+128
+Iter:     1 | Cost: 0.6844105 | Acc train: 0.6933333 | Acc validation: 0.6800000 
+Iter:     2 | Cost: 0.5834128 | Acc train: 0.8800000 | Acc validation: 0.8000000 
+Iter:     3 | Cost: 0.5062029 | Acc train: 0.9733333 | Acc validation: 0.9600000 
+Iter:     4 | Cost: 0.4592369 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     5 | Cost: 0.4213743 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     6 | Cost: 0.4024386 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     7 | Cost: 0.3980364 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     8 | Cost: 0.4197204 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:     9 | Cost: 0.3996886 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    10 | Cost: 0.3755119 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    11 | Cost: 0.3484468 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    12 | Cost: 0.3331604 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    13 | Cost: 0.3295058 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    14 | Cost: 0.3098647 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    15 | Cost: 0.3025757 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    16 | Cost: 0.2856726 | Acc train: 0.9866667 | Acc validation: 1.0000000 
+Iter:    17 | Cost: 0.3129132 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    18 | Cost: 0.3013345 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    19 | Cost: 0.2942744 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    20 | Cost: 0.2938136 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    21 | Cost: 0.2760506 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    22 | Cost: 0.2868331 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    23 | Cost: 0.2782665 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    24 | Cost: 0.2870938 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    25 | Cost: 0.2858996 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    26 | Cost: 0.2668627 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    27 | Cost: 0.2580287 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    28 | Cost: 0.2396166 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    29 | Cost: 0.2500168 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    30 | Cost: 0.2596110 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    31 | Cost: 0.2827343 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    32 | Cost: 0.2758145 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    33 | Cost: 0.2521416 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Iter:    34 | Cost: 0.2600974 | Acc train: 1.0000000 | Acc validation: 1.0000000 
+Traceback (most recent call last):
+  File "/home/pan1024/SliQSim-master/main.py", line 297, in <module>
+    result = main(filename, unit = np.pi/frac, n_qubits = 3, n_iter = 80, n_layers = 6, simulator="SliQSim")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pan1024/SliQSim-master/main.py", line 236, in main
+    weights, bias = step(cost, weights, bias, delta, feats_train_batch, Y_train_batch, stepsize)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pan1024/SliQSim-master/main.py", line 174, in step
+    temp_2 = cost(weights, bias, feats_train_batch, Y_train_batch)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pan1024/SliQSim-master/main.py", line 143, in cost
+    predictions = [ variational_classifier(weights, bias, f) for f in features ]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pan1024/SliQSim-master/main.py", line 143, in <listcomp>
+    predictions = [ variational_classifier(weights, bias, f) for f in features ]
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pan1024/SliQSim-master/main.py", line 130, in variational_classifier
+    return sliqsim(weights, init_state) + bias
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pan1024/SliQSim-master/main.py", line 106, in sliqsim
+    exe_result = os.popen("./SliQSim --sim_qasm circuit.qasm").read().split('\n')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

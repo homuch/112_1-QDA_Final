@@ -55,16 +55,11 @@ void Simulator::init_state(int *constants)
 }
 
 /**Function*************************************************************
-
   Synopsis    [initialize state vector by a initial state matrix]
-
   Description [state matrix : w x 2^n integer matrix.
-               Ex. state[3][0] means the d component of coefficient of the first basis state]
-
+               E.g. state[3][0] means the d component of coefficient of the first basis state]
   SideEffects []
-
   SeeAlso     []
-
 ***********************************************************************/
 void Simulator::init_state_by_matrix(int state_k, std::vector<std::vector<int>>& state)
 {
@@ -393,4 +388,11 @@ void Simulator::print_info(double runtime, size_t memPeak)
     // std::cout << "  Measurement: " << std::endl;
     // for(it = state_count.begin(); it != state_count.end(); it++)
     //     std::cout << "      " << it->first << ": " << it->second << std::endl;
+}
+
+// using VQE
+void Simulator::setVQEParam(int _res, bool _usingVQE)
+{
+    res = _res;
+    usingVQE = _usingVQE;
 }

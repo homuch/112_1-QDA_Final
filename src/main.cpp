@@ -22,6 +22,10 @@ int main(int argc, char **argv)
     ("alloc", po::value<bool>()->default_value(1), "allocate new BDDs when overflow is detected.\n"
                                                     "0: do not allocate new BDDs. This may lead to numerical errors.\n"
                                                     "1: allocate new BDDs (default option).")
+    ("res", po::value<unsigned int>()->default_value(4), "define the resolution of rz gate angle.\n"
+                                                         "The input parameter should be the power of 2.\n"
+                                                         "4: use default 4 integers representation.\n"
+                                                         "other : incresed BDD numbers to support the resolution.")
     ;
 
     po::variables_map vm;
@@ -53,6 +57,10 @@ int main(int argc, char **argv)
     assert(shots > 0);
     Simulator simulator(type, shots, seed, r, isReorder, isAlloc);
 
+    // using VQE
+    int res = vm["res"].as<unsigned int>();
+    bool usingVQE = (res != 4);
+
     if (vm.count("sim_qasm"))
     {
         // read in file into a string
@@ -69,6 +77,8 @@ int main(int argc, char **argv)
         }
 
         std::string inFile_str = strStream.str(); //str holds the content of the file
+        if (usingVQE)
+            simulator.setVQEParam(res, usingVQE);
         simulator.sim_qasm(inFile_str);
     }
 
