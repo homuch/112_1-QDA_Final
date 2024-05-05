@@ -98,6 +98,8 @@ If you have any questions or suggestions, feel free to [create an issue](https:/
 
 ## Project : SliQSim on QAOA
 
+For the detail of RUS usage, see [https://github.com/homuch/rus](https://github.com/homuch/rus)
+
 First, make and compile the SliQSim executable.
 
 Then run QAOA.py (need pennylane package) (to test the code you can set use_outer_simulator to False)
@@ -108,4 +110,4 @@ Currently working :
 directly read in the command rz(0.1) q[0]; and the SliQSim code can find the nearest angle among the precompile file and perform RUS for it (You may add the option --rus to indicate the use of RUS).
 The second way is find the nearest angle among the precompile file in the QAOA.py python code and write the corresponding circuit into the qasm file that will be executed by SliQSim.
 
-2. Find the way to update parameters with SliQSim : Currently the performance of SliQSim is bad (not getting good solution). Need to find a good way to update parameters (such as the way to compute gradient, the choice of the stepsize etc.)
+2. (Probably solved) Find the way to update parameters with SliQSim : Currently the performance of SliQSim is bad (not getting good solution). Need to find a good way to update parameters (such as the way to compute gradient, the choice of the stepsize etc.)

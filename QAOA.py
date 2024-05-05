@@ -12,6 +12,9 @@ import sys
 import copy
 import ast
 
+debug = False
+# Debug mode
+
 n_vertex = 6
 edges = [(0, 1), (0, 2), (1, 2), (1, 3), (2, 4), (3, 4), (3, 5)]
 # define graph
@@ -43,7 +46,7 @@ outer_simulator = outer_simualtor_string[outer_simulator_index]
 
 rz_precision = np.pi/512
 rz_data_point = int(2 * np.pi / rz_precision + 0.5)
-if outer_simulator == "SliQSim":
+if outer_simulator == "SliQSim" or debug:
     data_folder = "gridsynth_precompile"
     data_name = "gridsynth_%d.data" % rz_data_point
     assert(data_name in os.listdir(data_folder))
@@ -130,6 +133,10 @@ def circuit_outer(params):
             for line in exe_result:
                 if line.startswith("The expectation value is"):
                     exp_v = float(line.split()[-1])
+                    # Weird bug when pstr_ops[i] has 2 elements (temporary fix)
+                    if len(pstr_ops[i]) == 2:
+                        exp_v = -exp_v
+            # print(exp_v)
             result += pstr_coeffs[i] * exp_v
 
         return np.array(result)
@@ -164,10 +171,11 @@ def circuit_outer(params):
             p_str = ["I"] * n_vertex
             for op in pstr_ops[i]:
                 qubit_wire_z = int(op[1:].strip('()'))
-                p_str[qubit_wire_z] = "Z"
+                p_str[n_vertex - 1 - qubit_wire_z] = "Z"
             p_str = ''.join(p_str)
             job = estimator.run([qc],[p_str])
             exp_v = job.result().values[0]
+            # print(exp_v)
             result += pstr_coeffs[i] * exp_v
 
         return np.array(result)
@@ -261,6 +269,19 @@ def step_outer(circuit_outer, params, delta, stepsize):
 graph = nx.Graph(edges)
 cost_h, mixer_h = op_type(graph, constrained = False)
 pauli_strings = qml.expval(cost_h).obs
+
+# Debug mode
+if debug:
+    params = [[-0.2],[0.4]]
+    print("Cost(default qubit) : " + str(circuit(params)))
+    # print(prob_circuit(params))
+    outer_simulator = "SliQSim"
+    print("Cost(SliQSim) : " + str(circuit_outer(params)))
+    # print(prob_circuit_outer(params, 100000))
+    outer_simulator = "DDSIM"
+    print("Cost(DDSIM) : " + str(circuit_outer(params)))
+    # print(prob_circuit_outer(params, 100000))
+    sys.exit()
 
 # Train the parameter
 optimizer = qml.GradientDescentOptimizer()
