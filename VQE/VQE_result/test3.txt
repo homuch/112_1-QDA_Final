@@ -1,0 +1,67 @@
+start step
+Compare
+Autograd ArrayBox with value 0.43401667652552856
+Autograd ArrayBox with value 0.434016676525528
+Compare
+Autograd ArrayBox with value 0.39993101582767304
+Autograd ArrayBox with value 0.3999310158276782
+Compare
+Autograd ArrayBox with value 0.40323812891214444
+Autograd ArrayBox with value 0.40323812891214317
+Compare
+Autograd ArrayBox with value 0.04772262681877664
+Autograd ArrayBox with value 0.04772262681877676
+Compare
+Autograd ArrayBox with value 0.14015209523509212
+Autograd ArrayBox with value 0.14015209523509287
+end step
+Compare
+0.1277493286034005
+0.12774932860340132
+Compare
+0.4015378867388676
+0.4015378867388663
+
+Iter:     1 | Cost: 0.7926801 | Acc train: 0.5066667 | Acc validation: 0.6000000
+start step
+Compare
+Autograd ArrayBox with value 0.40180791681384964
+Autograd ArrayBox with value 0.4018079168138501
+Compare
+Autograd ArrayBox with value 0.3971367387894612
+Autograd ArrayBox with value 0.3971367387894601
+Compare
+Autograd ArrayBox with value 0.11892624504673772
+Autograd ArrayBox with value 0.11892624504673988
+Compare
+Autograd ArrayBox with value 0.13047532180532653
+Autograd ArrayBox with value 0.13047532180532717
+Compare
+Autograd ArrayBox with value 0.39249473199668194
+Autograd ArrayBox with value 0.3924947319966812
+end step
+Compare
+0.12598596478559226
+0.1259859647855931
+Compare
+0.39977452292105936
+0.3997745229210581
+
+Iter:     2 | Cost: 0.7917747 | Acc train: 0.5066667 | Acc validation: 0.6000000
+start step
+Compare
+Autograd ArrayBox with value 0.2953307089487699
+Autograd ArrayBox with value 0.295330708948769
+Compare
+Autograd ArrayBox with value 0.3984802542321749
+Autograd ArrayBox with value 0.3984802542321739
+Compare
+Autograd ArrayBox with value 0.43055307053444347
+Autograd ArrayBox with value 0.4305530705344429
+Compare
+Autograd ArrayBox with value 0.41135416355170856
+Autograd ArrayBox with value 0.411354163551709
+Compare
+Autograd ArrayBox with value 0.10524261895978723
+Autograd ArrayBox with value 0.10524261895978759
+end step

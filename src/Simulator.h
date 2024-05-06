@@ -55,12 +55,14 @@ public:
     void RUS(std::vector<int> mqubits, std::vector<int> cond);
 
     /* measurement */
+    void getExpectVal();
     void measurement();
     void getStatevector();
 
     /* simulation */
     void init_simulator(int n);
     void sim_qasm_file(std::string qasm);
+    void sim_qasm_file_VQE(std::string qasm);
     void sim_qasm(std::string qasm);
     void print_results();
 
@@ -68,6 +70,7 @@ public:
     void reorder();
     void decode_entries();
     void print_info(double runtime, size_t memPeak);
+    void setVQEParam(int _res, bool _usingVQE); // using VQE
 
 private:
     DdManager *manager;
@@ -84,6 +87,8 @@ private:
     bool isReorder;
     bool isAlloc;
     int nClbits;
+    std::vector<int> expval_qubits;
+    double expval;
     std::vector<std::vector<int>> measured_qubits_to_clbits; // empty if not measured
     std::string measure_outcome;
     double normalize_factor; // normalization factor used in measurement
@@ -100,6 +105,7 @@ private:
     double error;
 
     /* measurement */
+    double get_total_prob(DdNode *node, int kd2, int nVar, int nAnci_fourInt);
     double measure_probability(DdNode *node, int kd2, int nVar, int nAnci_fourInt, int edge);
     void measure_one(int position, int kd2, double H_factor, int nVar, int nAnci_fourInt, std::string *outcome);
     void measure_and_collapse(std::unordered_map<int,int>& measured_qubits_to_clbits);
@@ -108,11 +114,16 @@ private:
 
     /* misc */
     void init_state(int *constants);
+    void init_state_by_matrix(int state_k, std::vector<std::vector<int>>& state);
     void alloc_BDD(DdNode ***Bdd, bool extend);
     void dropLSB(DdNode ***Bdd);
     int overflow3(DdNode *g, DdNode *h, DdNode *crin);
     int overflow2(DdNode *g, DdNode *crin);
     void nodecount();
+
+    /* Using VQE */
+    int res;
+    bool usingVQE;
 
     // Clean up Simulator
     void clear() {

@@ -55,6 +55,79 @@ void Simulator::init_state(int *constants)
 }
 
 /**Function*************************************************************
+  Synopsis    [initialize state vector by a initial state matrix]
+  Description [state matrix : w x 2^n integer matrix.
+               E.g. state[3][0] means the d component of coefficient of the first basis state]
+  SideEffects []
+  SeeAlso     []
+***********************************************************************/
+void Simulator::init_state_by_matrix(int state_k, std::vector<std::vector<int>>& state)
+{
+    this->k = state_k;
+
+    // DdNode *var, *tmp;
+    All_Bdd = new DdNode **[w];
+    for (int i = 0; i < w; i++)
+        All_Bdd[i] = new DdNode *[r];
+
+    // For each a,b,c,d
+    for (int i = 0; i < w; i++)
+    {
+        // Initialize r BDDs to constant 0
+        for (int b=0; b<r; b++)
+        {
+            All_Bdd[i][b] = Cudd_Not(Cudd_ReadOne(manager));
+            Cudd_Ref(All_Bdd[i][b]);
+        }
+        // For each basis state
+        for (int j = 0;j < pow(2,n);j++)
+        {
+            int state_int = state[i][j];
+            // For each bit in the integer
+            for (int b=0; b<r; b++)
+            {
+                // Add minterm if needed
+                if ((state_int >> b)%2 == 0)
+                    continue;
+                else
+                {
+                    // Convert j to its bit string
+                    std::string state_str(n,'0');
+                    for (int x = n-1; x >= 0; x--)
+                    {
+                        if ((j >> x)%2 == 0)
+                            continue;
+                        else
+                        {
+                            state_str[x] = '1';
+                        }
+                    }
+                    // Create the minterm and OR it to the BDD All_Bdd[i][b]
+                    DdNode *var, *tmp, *tmp_term;
+                    tmp_term = Cudd_ReadOne(manager);
+                    Cudd_Ref(tmp_term);
+                    for (int x = n-1; x >= 0; x--)
+                    {
+                        var = Cudd_bddIthVar(manager, x);
+                        if (state_str[x] == '0')
+                            tmp = Cudd_bddAnd(manager, Cudd_Not(var), tmp_term);
+                        else
+                            tmp = Cudd_bddAnd(manager, var, tmp_term);
+                        Cudd_Ref(tmp);
+                        Cudd_RecursiveDeref(manager, tmp_term);
+                        tmp_term = tmp;
+                    }
+                    tmp = Cudd_bddOr(manager,All_Bdd[i][b], tmp_term);
+                    Cudd_Ref(tmp);
+                    Cudd_RecursiveDeref(manager, All_Bdd[i][b]);
+                    All_Bdd[i][b] = tmp;
+                }
+            }
+        }
+    }
+}
+
+/**Function*************************************************************
 
   Synopsis    [allocate new BDDs for each integer vector]
 
@@ -315,4 +388,11 @@ void Simulator::print_info(double runtime, size_t memPeak)
     // std::cout << "  Measurement: " << std::endl;
     // for(it = state_count.begin(); it != state_count.end(); it++)
     //     std::cout << "      " << it->first << ": " << it->second << std::endl;
+}
+
+// using VQE
+void Simulator::setVQEParam(int _res, bool _usingVQE)
+{
+    res = _res;
+    usingVQE = _usingVQE;
 }
