@@ -1086,3 +1086,16 @@ void Simulator::RUS(std::vector<int> mqubits, std::vector<int> cond){
     }
     measure_and_collapse(qubit_to_cond);
 }
+
+void Simulator::rz_RUS(int iqubit, double angle){
+    std::string gate_file = find_rz_RUS_gate(angle);
+    std::ifstream file(gate_file);
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    std::string gate = buffer.str();
+
+    replace_all(gate, "__ancilla_bit__", std::to_string(rus_anci));
+    replace_all(gate, "__compuation_bit__", std::to_string(iqubit));
+    
+    sim_qasm_file(gate);
+}

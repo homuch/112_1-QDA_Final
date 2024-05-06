@@ -1,7 +1,6 @@
 #include "Simulator.h"
 #include "util_sim.h"
 
-
 /**Function*************************************************************
 
   Synopsis    [Initailize simulator]
@@ -142,10 +141,17 @@ void Simulator::sim_qasm_file(std::string qasm)
                     getline(inStr_ss, inStr, '[');
                 }
             }
-            else if (inStr == "rus"){
+            else if (inStr == "rus")
+            {
+                if (!usingRUS)
+                {
+                    std::cerr << std::endl
+                              << "[warning]: Syntax \'" << inStr << "\' can only be supported under --rus option. The line is ignored ..." << std::endl;
+                    continue;
+                }
                 std::vector<int> buffer;
                 getline(inStr_ss, inStr, '[');
-                while(getline(inStr_ss, inStr, ']'))
+                while (getline(inStr_ss, inStr, ']'))
                 {
                     // std::cout<<inStr<<std::endl;
                     buffer.push_back(stoi(inStr));
@@ -159,7 +165,20 @@ void Simulator::sim_qasm_file(std::string qasm)
             }
             else
             {
-                if (inStr == "x")
+                if (inStr.find_first_of("rz(") == 0 && inStr.back() == ')')
+                {
+                    if (!usingRUS)
+                    {
+                        std::cerr << std::endl
+                                  << "[warning]: Syntax \'" << inStr << "\' can only be supported under --rus option. The line is ignored ..." << std::endl;
+                        continue;
+                    }
+                    std::string angle = inStr.substr(3, inStr.size() - 4);
+                    getline(inStr_ss, inStr, '[');
+                    getline(inStr_ss, inStr, ']');
+                    rz_RUS(stoi(inStr), stod(angle));
+                }
+                else if (inStr == "x")
                 {
                     getline(inStr_ss, inStr, '[');
                     getline(inStr_ss, inStr, ']');

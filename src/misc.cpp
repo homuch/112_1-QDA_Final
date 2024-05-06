@@ -1,5 +1,12 @@
 #include "Simulator.h"
 #include "util_sim.h"
+#if __cplusplus >= 201703L
+    #include <filesystem>
+    namespace filesystem = std::filesystem;
+#else
+    #include <experimental/filesystem>
+    namespace filesystem = std::experimental::filesystem;
+#endif
 
 
 /**Function*************************************************************
@@ -395,4 +402,111 @@ void Simulator::setVQEParam(int _res, bool _usingVQE)
 {
     res = _res;
     usingVQE = _usingVQE;
+}
+
+// using RUS
+void Simulator::setUpRUS(int _rus)
+{
+    usingRUS = _rus >= 0;
+    rus_anci = _rus;
+}
+
+/**Function*************************************************************
+  Synopsis    [find the path of Rz gate file]
+  Description []
+  SideEffects []
+  SeeAlso     []
+***********************************************************************/
+std::string Simulator::find_rz_RUS_gate(const double& angle){
+
+    std::ifstream config_file(rus_gates_path + "/config.yaml");
+    std::string angle_unit;
+    if (config_file.is_open()){
+        angle_unit = find_in_yaml(config_file, "angle_unit");
+    }
+    else{
+        throw std::runtime_error("Error: cannot open " + rus_gates_path + "/config.yaml");
+    }
+    if(angle_unit.empty()){
+        throw std::runtime_error("Error: angle_unit not found in " + rus_gates_path + "/config.yaml");
+    }
+    double angle_unit_d = parse_theta(angle_unit);
+    if(angle_unit_d <= 0){
+        throw std::runtime_error("Error: wrong format of angle_unit in " + rus_gates_path + "/config.yaml");
+    }
+    double normalized_angle = normalize_theta(angle);
+    int angle_int = static_cast<int>(round(normalized_angle / angle_unit_d));
+    std::string file_path = find_in_yaml(config_file, std::to_string(angle_int));
+    if(file_path.empty()){
+        throw std::runtime_error("Error: angle " + std::to_string(angle) + " not found in " + rus_gates_path + "/config.yaml");
+    }
+    return rus_gates_path + "/" + file_path;
+}
+
+
+/**Function*************************************************************
+  Synopsis    [check and build RUS]
+  Description []
+  SideEffects []
+  SeeAlso     []
+***********************************************************************/
+
+void Simulator::check_and_build_rus(double epsilon, double delta){
+    if (filesystem::exists(rus_gates_path))
+    {
+        // rus_gates_path exists
+        bool fail = false;
+        std::ifstream config_file(rus_gates_path + "/config.yaml");
+        if (config_file.is_open()){
+            std::string epsilon_str = find_in_yaml(config_file, "epsilon");
+            std::string delta_str = find_in_yaml(config_file, "delta");
+            if(epsilon_str.empty() || delta_str.empty()){
+                std::cerr
+                    << "Error: epsilon or delta not found in " + rus_gates_path + "/config.yaml"
+                    << "Rebuilding RUS gates..."
+                    << std::endl;
+                fail = true;
+            }
+            double epsilon_config = parse_theta(epsilon_str);
+            double delta_config = parse_theta(delta_str);
+            if(epsilon_config - epsilon > 1e-10 || delta_config - delta > 1e-10){
+                std::cout
+                    << "Warning: epsilon or delta in " + rus_gates_path + "/config.yaml"
+                    << " is different from the input epsilon or delta"
+                    << "Rebuilding RUS gates..."
+                    << std::endl;
+                fail = true;
+            }
+        }
+        else{
+            std::cerr
+                << "Error: cannot open " + rus_gates_path + "/config.yaml"
+                << "Rebuilding RUS gates..."
+                << std::endl
+            ;
+            fail = true;
+        }
+
+        if(!fail)return;
+        else filesystem::remove_all(rus_gates_path);
+    } else {
+        // rus_gates_path does not exist
+        std::cout << "Built RUS gate not found. \nBuilding RUS gates..."<<std::endl;
+        filesystem::create_directories(rus_gates_path);
+    }
+    std::string rus_syn_executable = "/path/to/rus_syn_executable";
+    std::string command = rus_syn_executable 
+        + " -O " + rus_gates_path 
+        + " -E " + std::to_string(epsilon) 
+        + " -P " + std::to_string(delta) 
+        + " -F 2"
+        + "-C g-count"
+        + "--qubit-name __compuation_bit__"
+        + "--ancilla-name __ancilla_bit__"
+        + "--database"
+        ;
+    int result = system(command.c_str());
+    if (result != 0) {
+        throw std::runtime_error("Error: failed to execute rus_syn_executable");
+    }
 }

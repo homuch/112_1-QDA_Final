@@ -26,6 +26,11 @@ int main(int argc, char **argv)
                                                          "The input parameter should be the power of 2.\n"
                                                          "4: use default 4 integers representation.\n"
                                                          "other : incresed BDD numbers to support the resolution.")
+    ("rus", po::value<int>()->default_value(-1), "define ancilla qubit for rus computation.\n"
+                                                         "The input parameter should be non-negative integer.\n"
+                                                         "If the input is negative, the simulator will not perform RUS.")
+    ("rus_epsilon", po::value<double>()->default_value(0.01), "define epsilon for RUS computation.")
+    ("rus_delta", po::value<double>()->default_value(0.01), "define delta for RUS computation.")
     ;
 
     po::variables_map vm;
@@ -60,6 +65,13 @@ int main(int argc, char **argv)
     // using VQE
     int res = vm["res"].as<unsigned int>();
     bool usingVQE = (res != 4);
+
+    // RUS
+    int rus = vm["rus"].as<int>();
+    simulator.setUpRUS(rus); 
+    if(vm.count("rus")){// todo: support "pi" in angles
+        simulator.check_and_build_rus(vm["rus_epsilon"].as<double>(), vm["rus_delta"].as<double>());
+    }
 
     if (vm.count("sim_qasm"))
     {

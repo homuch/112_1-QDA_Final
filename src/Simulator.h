@@ -5,10 +5,10 @@
 #include <stdio.h> // FILE
 #include <unordered_map>
 #include <sys/time.h> //estimate time
-#include <fstream> //fstream
-#include <sstream> // int to string
-#include <cstdlib> //atoi
-#include <string> //string
+#include <fstream>    //fstream
+#include <sstream>    // int to string
+#include <cstdlib>    //atoi
+#include <string>     //string
 #include <sstream>
 #include <random>
 #include <cmath>
@@ -16,7 +16,6 @@
 #include "../cudd/cudd/cudd.h"
 #include "../cudd/cudd/cuddInt.h"
 #include "../cudd/util/util.h"
-
 
 #define PI 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899
 
@@ -53,6 +52,7 @@ public:
     void PauliZ(std::vector<int> iqubit); // Z or CZ
     void measure(int qreg, int creg);
     void RUS(std::vector<int> mqubits, std::vector<int> cond);
+    void rz_RUS(int iqubit, double angle);
 
     /* measurement */
     void getExpectVal();
@@ -71,6 +71,8 @@ public:
     void decode_entries();
     void print_info(double runtime, size_t memPeak);
     void setVQEParam(int _res, bool _usingVQE); // using VQE
+    void setUpRUS(int _rus);                     // using RUS
+    void check_and_build_rus(double epsilon, double delta);
 
 private:
     DdManager *manager;
@@ -120,10 +122,17 @@ private:
     int overflow3(DdNode *g, DdNode *h, DdNode *crin);
     int overflow2(DdNode *g, DdNode *crin);
     void nodecount();
+    std::string find_rz_RUS_gate(const double& angle);
 
     /* Using VQE */
     int res;
     bool usingVQE;
+
+    /* Using RUS */
+    bool usingRUS;
+    int rus_anci;// rus available when rus_anci >= 0
+    const std::string rus_gates_path="./rus/rus_precompile";
+    const std::string rus_syn_executable="./rus/rusSyn";
 
     // Clean up Simulator
     void clear() {
