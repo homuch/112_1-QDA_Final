@@ -565,7 +565,22 @@ void Simulator::sim_qasm_file_VQE(std::string qasm)
                     getline(inStr_ss, inStr, ']');
                     PauliY(stoi(inStr));
                 }*/
-                if (inStr == "z")
+                if (inStr.find_first_of("rz(") == 0 && inStr.back() == ')')
+                {
+                    if (!usingRUS)
+                    {
+                        std::cerr << std::endl
+                                  << "[warning]: Syntax \'" << inStr << "\' can only be supported under --rus option. The line is ignored ..." << std::endl;
+                        continue;
+                    }
+                    std::string angle = inStr.substr(3, inStr.size() - 4);
+                    getline(inStr_ss, inStr, '[');
+                    getline(inStr_ss, inStr, ']');
+                    // std::cout<<"inStr: "<<inStr<<std::endl;
+                    // std::cout<<"angle: "<<angle<<std::endl;
+                    rz_RUS(stoi(inStr), parse_theta(angle));
+                }
+                else if (inStr == "z")
                 {
                     std::vector<int> iqubit(1);
                     getline(inStr_ss, inStr, '[');
