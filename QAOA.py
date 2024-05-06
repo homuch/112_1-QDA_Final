@@ -40,7 +40,7 @@ use_outer_simulator = True
 # whether to use outer simulator
 
 outer_simualtor_string = ["SliQSim", "DDSIM" , "SliQSim_RUS"]
-outer_simulator_index = 0
+outer_simulator_index = 2
 outer_simulator = outer_simualtor_string[outer_simulator_index]
 # outer simulator used
 
@@ -181,8 +181,52 @@ def circuit_outer(params):
         return np.array(result)
     elif outer_simulator == "SliQSim_RUS":
         # TODO : Combine SliQSim and RUS to calculate the expectation value of a Pauli string
+        qasm_string_original = circuit.qtape.to_openqasm()
+        basic_file_content = ""
 
-        return np.array(0) # Output the expectation value here
+        q_count = None
+        # QAOA circuit
+        for qasm_str in qasm_string_original.split('\n'):
+            # print(qasm_str)
+            # add ancilla qubit
+            if 'qreg' in qasm_str:
+                print(qasm_str)
+                before_q = qasm_str.split('q[')[0]
+                q_count = int(qasm_str.split('q[')[1].split(']')[0])
+                q_count = q_count + 1
+                basic_file_content += ("%s q[%d]; \n" % (before_q, q_count))
+            elif 'measure' in qasm_str:
+                continue
+            else :
+                basic_file_content += qasm_str + '\n'
+
+        result = 0
+        for i in range(len(pstr_ops)):
+            file_content = basic_file_content
+
+            # expval
+            for op in pstr_ops[i]:
+                qubit_wire_z = int(op[1:].strip('()'))
+                file_content += ("exp_val q[%d]; \n" % (qubit_wire_z))
+
+            qasm_path_sliqsim = "sliqsim.qasm"
+            with open(qasm_path_sliqsim, 'w') as file:
+                file.write(file_content)
+            # execute
+            exe_result = os.popen("./SliQSim --sim_qasm " 
+            + qasm_path_sliqsim 
+            + (" --rus %d --rus_epsilon 1e-6 --rus_delta pi/32" %(q_count - 1 ))).read().split('\n') # todo: user adjustable epsilon and delta
+            for line in exe_result:
+                if line.startswith("The expectation value is"):
+                    exp_v = float(line.split()[-1])
+                    # Weird bug when pstr_ops[i] has 2 elements (temporary fix)
+                    if len(pstr_ops[i]) == 2:
+                        exp_v = -exp_v
+            # print(exp_v)
+            result += pstr_coeffs[i] * exp_v
+
+        return np.array(result)
+        # return np.array(0) # Output the expectation value here
     else:
         return np.array(0)
 
@@ -243,16 +287,26 @@ def prob_circuit_outer(params, shots=1000):
         basic_file_content = ""
 
         # QAOA circuit
+        q_count = None
+        c_count = None
+        add_measure = False
         for qasm_str in qasm_string_original.split('\n'):
             # print(qasm_str)
-            q_count = None
             # add ancilla qubit
-            if 'q[' in qasm_str:
-                basic_file_content += qasm_str + '\n'
+            if 'qreg' in qasm_str:
                 before_q = qasm_str.split('q[')[0]
                 q_count = int(qasm_str.split('q[')[1].split(']')[0])
                 q_count = q_count + 1
                 basic_file_content += ("%s q[%d]; \n" % (before_q, q_count))
+            if 'creg' in qasm_str:
+                before_q = qasm_str.split('c[')[0]
+                c_count = int(qasm_str.split('c[')[1].split(']')[0])
+                c_count = c_count + 1
+                basic_file_content += ("%s c[%d]; \n" % (before_q, c_count))
+            elif 'measure' in qasm_str and not add_measure:
+                add_measure = True
+                basic_file_content += qasm_str + '\n'
+                basic_file_content += "measure q[%d] -> c[%d]; \n" % (n_vertex, n_vertex)
             else :
                 basic_file_content += qasm_str + '\n'
 
@@ -261,12 +315,14 @@ def prob_circuit_outer(params, shots=1000):
             file.write(qasm_string_original)
 
         assert(q_count is not None)
+        assert(q_count == c_count)
         # execute
         exe_result = os.popen("./SliQSim --sim_qasm " 
         + qasm_path_sliqsim 
         + (" --shots %d" %(shots)) 
-        + ("--rus %d --rus_epsilon 1e-6 --rus_delta pi/32" %(q_count))).read().split('\n') # todo: user adjustable epsilon and delta
+        + (" --rus %d --rus_epsilon 1e-6 --rus_delta pi/32" %(q_count))).read().split('\n') # todo: user adjustable epsilon and delta
         count = ast.literal_eval(exe_result[0])['counts']
+        print("histogram : " + str(count))
         return [
             (count.setdefault(bin(i << 1).lstrip('0b')[::-1].ljust(n_vertex + 1,'0'),0)
             + count.setdefault(bin(i << 1 + 1).lstrip('0b')[::-1].ljust(n_vertex + 1,'0'),0))/shots for i in range(2**n_vertex)]
