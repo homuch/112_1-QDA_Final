@@ -29,8 +29,8 @@ int main(int argc, char **argv)
     ("rus", po::value<int>()->default_value(-1), "define ancilla qubit for rus computation.\n"
                                                          "The input parameter should be non-negative integer.\n"
                                                          "If the input is negative, the simulator will not perform RUS.")
-    ("rus_epsilon", po::value<double>()->default_value(0.01), "define epsilon for RUS computation.")
-    ("rus_delta", po::value<double>()->default_value(0.01), "define delta for RUS computation.")
+    ("rus_epsilon", po::value<std::string>()->default_value("1e-6"), "define epsilon for RUS computation.")
+    ("rus_delta", po::value<std::string>()->default_value("pi/32"), "define delta for RUS computation.")
     ;
 
     po::variables_map vm;
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     int rus = vm["rus"].as<int>();
     simulator.setUpRUS(rus); 
     if(vm.count("rus")){// todo: support "pi" in angles
-        simulator.check_and_build_rus(vm["rus_epsilon"].as<double>(), vm["rus_delta"].as<double>());
+        simulator.check_and_build_rus(vm["rus_epsilon"].as<std::string>(), vm["rus_delta"].as<std::string>());
     }
 
     if (vm.count("sim_qasm"))

@@ -72,7 +72,7 @@ public:
     void print_info(double runtime, size_t memPeak);
     void setVQEParam(int _res, bool _usingVQE); // using VQE
     void setUpRUS(int _rus);                     // using RUS
-    void check_and_build_rus(double epsilon, double delta);
+    void check_and_build_rus(const std::string& epsilon, const std::string& delta);
 
 private:
     DdManager *manager;

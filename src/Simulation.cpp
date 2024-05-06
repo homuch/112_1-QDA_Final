@@ -157,11 +157,18 @@ void Simulator::sim_qasm_file(std::string qasm)
                     buffer.push_back(stoi(inStr));
                     getline(inStr_ss, inStr, '[');
                 }
-                assert(buffer.size() % 2 == 0);
-                std::vector<int> mqubits(buffer.begin(), buffer.begin() + buffer.size() / 2);
-                std::vector<int> cond(buffer.begin() + buffer.size() / 2, buffer.end());
-                assert(mqubits.size() == cond.size());
-                RUS(mqubits, cond);
+                if(buffer.size() % 2 == 0){
+                    std::vector<int> mqubits(buffer.begin(), buffer.begin() + buffer.size() / 2);
+                    std::vector<int> cond(buffer.begin() + buffer.size() / 2, buffer.end());
+                    assert(mqubits.size() == cond.size());
+                    RUS(mqubits, cond);
+                } else {
+                    assert(buffer.size() == 1);
+                    auto pos = inStr.find("==");
+                    inStr = inStr.substr(pos+2);
+                    std::vector<int> cond(1, stoi(inStr));
+                    RUS(buffer, cond);
+                }
             }
             else
             {
@@ -176,7 +183,9 @@ void Simulator::sim_qasm_file(std::string qasm)
                     std::string angle = inStr.substr(3, inStr.size() - 4);
                     getline(inStr_ss, inStr, '[');
                     getline(inStr_ss, inStr, ']');
-                    rz_RUS(stoi(inStr), stod(angle));
+                    // std::cout<<"inStr: "<<inStr<<std::endl;
+                    // std::cout<<"angle: "<<angle<<std::endl;
+                    rz_RUS(stoi(inStr), parse_theta(angle));
                 }
                 else if (inStr == "x")
                 {

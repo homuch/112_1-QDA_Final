@@ -11,7 +11,7 @@ extern void replace_all(std::string &str, const std::string &search_str, const s
 extern int int_array_full_check(int length, int *reg);
 extern size_t getPeakRSS();
 extern size_t getCurrentRSS();
-extern std::string find_in_yaml(std::ifstream& yaml, const std::string& key);
+extern std::string find_in_yaml(std::istream& yaml, const std::string& key);
 extern double parse_theta(std::string theta);
 extern double normalize_theta(double theta);
 

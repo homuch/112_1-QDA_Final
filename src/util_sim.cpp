@@ -127,14 +127,20 @@ void replace_all(std::string& str, const std::string& search_str, const std::str
   SeeAlso     []
 
 ***********************************************************************/
-std::string find_in_yaml(std::ifstream& yaml, const std::string& key)
+std::string find_in_yaml(std::istream& yaml, const std::string& key)
 {
+    // std::cout<<"key: "<<key<<std::endl;
     std::string res;
-    for(std::string line; std::getline(yaml, line);){
-        if (line.find("key") != std::string::npos){
+    std::string line;
+    while(std::getline(yaml, line)){
+        // std::cout<<"line: "<<line<<std::endl;
+        if (line.find(key) == 0){
              res = line.substr(line.find(":") + 1);
              break;
         }
+    }
+    if(res[0] == ' '){
+        res = res.substr(1);
     }
     return res;
 }
@@ -151,21 +157,31 @@ std::string find_in_yaml(std::ifstream& yaml, const std::string& key)
 
 ***********************************************************************/
 double parse_theta(std::string theta){
+  try{
     auto pi_pos = theta.find("pi");
     bool with_pi = pi_pos != std::string::npos;
     double scaler = with_pi ? PI: 1;
     if(with_pi){
         theta.replace(pi_pos, 2, "");
     }
-
     auto slash_pos = theta.find("/");
     if(slash_pos != std::string::npos){
       std::string numerator, denominator;
       numerator = theta.substr(0, slash_pos);
+      if(numerator.empty()){
+        numerator = "1";
+      } else if(numerator == "-"){
+        numerator = "-1";
+      }
       denominator = theta.substr(slash_pos + 1);
       return std::stod(numerator) / std::stod(denominator) * scaler;
     } 
     return std::stod(theta) * scaler;
+    } catch(std::invalid_argument& e){
+        std::cerr << "Error: " << e.what() << std::endl;
+        std::cout << "Invalid theta: " << theta << std::endl;
+        throw e;
+    }
 }
 
 /**Function*************************************************************
