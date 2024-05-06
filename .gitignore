@@ -1,4 +1,3 @@
 .DS_Store
 BDDSim
-cudd/
-SliQSim
+*.qasm
