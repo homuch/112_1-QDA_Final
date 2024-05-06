@@ -1,0 +1,7 @@
+pennylane
+numpy
+matplotlib
+networkx
+qiskit
+mqt
+mqt.ddsim

@@ -239,8 +239,38 @@ def prob_circuit_outer(params, shots=1000):
         return [count.setdefault(bin(i).lstrip('0b').zfill(n_vertex)[::-1],0)/shots for i in range(2**n_vertex)]
     elif outer_simulator == "SliQSim_RUS":
         # TODO: Combine SliQSim and RUS to simulate the QAOA circuit and get the probability distribution
+        qasm_string_original = circuit.qtape.to_openqasm()
+        basic_file_content = ""
 
-        return [0.1]*(2**n_vertex) # return the distribution here
+        # QAOA circuit
+        for qasm_str in qasm_string_original.split('\n'):
+            # print(qasm_str)
+            q_count = None
+            # add ancilla qubit
+            if 'q[' in qasm_str:
+                basic_file_content += qasm_str + '\n'
+                before_q = qasm_str.split('q[')[0]
+                q_count = int(qasm_str.split('q[')[1].split(']')[0])
+                q_count = q_count + 1
+                basic_file_content += ("%s q[%d]; \n" % (before_q, q_count))
+            else :
+                basic_file_content += qasm_str + '\n'
+
+        qasm_path_sliqsim = "sliqsim.qasm"
+        with open(qasm_path_sliqsim, 'w') as file:
+            file.write(qasm_string_original)
+
+        assert(q_count is not None)
+        # execute
+        exe_result = os.popen("./SliQSim --sim_qasm " 
+        + qasm_path_sliqsim 
+        + (" --shots %d" %(shots)) 
+        + ("--rus %d --rus_epsilon 1e-6 --rus_delta pi/32" %(q_count))).read().split('\n') # todo: user adjustable epsilon and delta
+        count = ast.literal_eval(exe_result[0])['counts']
+        return [
+            (count.setdefault(bin(i << 1).lstrip('0b')[::-1].ljust(n_vertex + 1,'0'),0)
+            + count.setdefault(bin(i << 1 + 1).lstrip('0b')[::-1].ljust(n_vertex + 1,'0'),0))/shots for i in range(2**n_vertex)]
+        # return [0.1]*(2**n_vertex) # return the distribution here
     else:
         return [0.1]*(2**n_vertex)
 
