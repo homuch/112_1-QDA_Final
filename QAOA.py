@@ -215,7 +215,7 @@ def circuit_outer(params):
             # execute
             exe_result = os.popen("./SliQSim --sim_qasm " 
             + qasm_path_sliqsim 
-            + (" --rus %d --rus_epsilon 1e-6 --rus_delta pi/32" %(q_count - 1 ))).read().split('\n') # todo: user adjustable epsilon and delta
+            + (" --rus %d --rus_epsilon 1e-6 --rus_delta %f" %(q_count - 1 , rz_precision))).read().split('\n') # todo: user adjustable epsilon and delta
             for line in exe_result:
                 if line.startswith("The expectation value is"):
                     exp_v = float(line.split()[-1])
@@ -320,7 +320,7 @@ def prob_circuit_outer(params, shots=1000):
         exe_result = os.popen("./SliQSim --sim_qasm " 
         + qasm_path_sliqsim 
         + (" --shots %d" %(shots)) 
-        + (" --rus %d --rus_epsilon 1e-6 --rus_delta pi/32" %(q_count))).read().split('\n') # todo: user adjustable epsilon and delta
+        + (" --rus %d --rus_epsilon 1e-6 --rus_delta %f" %(q_count, rz_precision))).read().split('\n') # todo: user adjustable epsilon and delta
         count = ast.literal_eval(exe_result[0])['counts']
         print("histogram : " + str(count))
         return [
