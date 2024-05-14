@@ -429,7 +429,7 @@ double Simulator::get_total_prob(DdNode *node, int kd2, int nVar, int nAnci_four
 
     Node_Table[child] = probability;
     Cudd_RecursiveDeref(manager, child);
-    return probability * pow(2, skip_level);
+    return probability * pow(2, skip_level) * rus_normalize_factor * rus_normalize_factor;
 }
 
 /**Function*************************************************************
