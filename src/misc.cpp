@@ -470,14 +470,14 @@ void Simulator::check_and_build_rus(const std::string& epsilon, const std::strin
 
             if(!(epsilon_str.empty() || delta_str.empty())){
                 
-            double epsilon_config = parse_theta(epsilon_str);
-            double delta_config = parse_theta(delta_str);
-            double epsilon_d = parse_theta(epsilon);
-            double delta_d = parse_theta(delta);
-                if(epsilon_config - epsilon_d > 1e-10 || delta_config - delta_d > 1e-10) {
+                double epsilon_config = parse_theta(epsilon_str);
+                double delta_config = parse_theta(delta_str);
+                double epsilon_d = parse_theta(epsilon);
+                double delta_d = parse_theta(delta);
+                if(abs(epsilon_config - epsilon_d) > 1e-10 || abs(delta_config - delta_d) > 1e-10) {
                     std::cout
                         << "Warning: epsilon or delta in " + rus_gates_path + "/config.yaml"
-                        << " is different from the input epsilon or delta"
+                        << " is different from the input epsilon or delta. \n"
                         << "Rebuilding RUS gates..."
                         << std::endl;
                     fail = true;
@@ -510,7 +510,8 @@ void Simulator::check_and_build_rus(const std::string& epsilon, const std::strin
         + " -O " + rus_gates_path 
         + " -E " + epsilon
         + " -P " + delta
-        + " -F 2"
+        + " -F 4"
+        + " -D -1"
         + " -C g-count"
         + " --qubit-name q[__compuation_bit__]"
         + " --ancil-name q[__ancilla_bit__]"

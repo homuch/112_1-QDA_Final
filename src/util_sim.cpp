@@ -134,7 +134,9 @@ std::string find_in_yaml(std::istream& yaml, const std::string& key)
     std::string line;
     while(std::getline(yaml, line)){
         // std::cout<<"line: "<<line<<std::endl;
-        if (line.find(key) == 0){
+        auto line_key = line.substr(0, line.find(":"));
+        // std::cout<<"line_key: "<<line_key<<std::endl;
+        if (line_key == key){
              res = line.substr(line.find(":") + 1);
              break;
         }

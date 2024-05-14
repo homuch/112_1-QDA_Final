@@ -69,7 +69,7 @@ int main(int argc, char **argv)
     // RUS
     int rus = vm["rus"].as<int>();
     simulator.setUpRUS(rus); 
-    if(vm.count("rus")){// todo: support "pi" in angles
+    if(vm.count("rus")){
         simulator.check_and_build_rus(vm["rus_epsilon"].as<std::string>(), vm["rus_delta"].as<std::string>());
     }
 
