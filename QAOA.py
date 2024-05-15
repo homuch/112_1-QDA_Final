@@ -53,6 +53,14 @@ if outer_simulator == "SliQSim" or debug:
     assert(data_name in os.listdir(data_folder))
     with open(data_folder + "/" + data_name) as file:
         precompile = file.read().split('\n')[:rz_data_point]
+
+if outer_simulator == "SliQSim_RUS" or debug:
+    qasm_path_sliqsim = "temp.qasm"
+    os.popen("echo 'qreg q[0];' > " + qasm_path_sliqsim)
+    os.popen("./SliQSim --sim_qasm " 
+    + qasm_path_sliqsim 
+    + (" --type 1 --rus %d --rus_epsilon 1e-6 --rus_delta %.20f" %(0 , rz_precision))).read().split('\n') 
+
 # set rz gate precision (temporary approach) and read needed file for SliQSim
 
 dev_string = ["default.qubit", "qiskit.aer", "lightning.gpu"]
